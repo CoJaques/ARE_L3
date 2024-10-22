@@ -1,4 +1,4 @@
-Project for the Terasic DE1-Soc board
+# Project for the Terasic DE1-Soc board
 
 This projects used avalon bus from HPS and it is exported to design an interface in the FPGA side. 
 The interface designed control DE1SoC IO (leds, buttons, switches) and parallel bus on Max10 with connector 80poles .
@@ -24,7 +24,13 @@ folder structure:
 
 # In the addressing plan, the size of the zone available for your interface correspond to the 14 address bits defined in the Avalon bus? Why?
 
+The size of the zone available for the interface corresponds to 14 address bits on the Avalon bus because the address range is 0x01_0000 to 0x01_FFFF, which provides 64 KB of space.
 
+Since the bus is 32-bit, the two most significant bits (MSBs) are not used for addressing, leaving 14 bits to handle the addressing. These 14 bits are enough to cover the entire range, ensuring all addresses in the 0x01_0000 to 0x01_FFFF zone are accessible.
+
+<br>
+
+---
 
 # Address plan
 
@@ -35,3 +41,7 @@ folder structure:
 | 0x01_0008 – 0x01_000B | **DE1-SoC Switches (10 Switches)**     | Read/Write       | Access to 10 switches on the DE1-SoC board.   |
 | 0x01_000C – 0x01_001F | **DE1-SoC LEDs (10 LEDs)**             | Read/Write       | Access to 10 LEDs on the DE1-SoC board.       |
 | 0x01_0020 – 0x01_002F | **Parallel Interface to Max10 LEDs**   | Read/Write       | Controls the Max10 LEDs through a 36-bit parallel interface. |
+
+<br>
+
+---
