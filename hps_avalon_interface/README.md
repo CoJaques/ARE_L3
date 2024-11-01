@@ -46,3 +46,10 @@ Since the bus is 32-bit, the two most significant bits (MSBs) are not used for a
 | 0x01_001C – 0x01_001F  | 0x04007         | **ip36_status** [1..0]                | Read            | Status of the Max10 LEDs through a 36-bit parallel interface. |
 
 ---
+
+# TODO 
+
+- Répondre correctement à la question 1
+- Synchroniser les entrées
+- Reprendre les process dispo sur cyberlearn
+- Finir les schema bloc
