@@ -34,15 +34,18 @@ Since the bus is 32-bit, the two most significant bits (MSBs) are not used for a
 
 # Address plan
 
-| **Offset CPU**         | **Offset FPGA** | **Peripheral**                        | **Access Type** | **Description**                                            |
-|------------------------|-----------------|---------------------------------------|------------------|------------------------------------------------------------|
-| 0x01_0000 – 0x01_0003  | 0x04000         | **Interface user ID (32-bit)**        | Read Only       | 32-bit user ID for identification.                         |
-| 0x01_0004 – 0x01_0007  | 0x04001         | **DE1-SoC Buttons (4 Keys)** [3..0]   | Read            | Access to 4 buttons on the DE1-SoC board.                  |
-| 0x01_0008 – 0x01_000B  | 0x04002         | **DE1-SoC Switches (10 Switches)** [9..0] | Read      | Access to 10 switches on the DE1-SoC board.                |
-| 0x01_000C – 0x01_000F  | 0x04003         | **DE1-SoC LEDs (10 LEDs)** [9..0]     | Read/Write      | Access to 10 LEDs on the DE1-SoC board.                    |
-| 0x01_0010 – 0x01_0013  | 0x04004         | **ip36_sel** [3..0]                   | Read/Write      | Controls the Max10 LEDs through a 36-bit parallel interface. |
-| 0x01_0014 – 0x01_0017  | 0x04005         | **ip36_data** [31..0]                 | Read/Write      | Controls the Max10 LEDs through a 36-bit parallel interface. |
-| 0x01_0018 – 0x01_001B  | 0x04006         | **ip36_we** [0]                       | Read/Write      | Controls the Max10 LEDs through a 36-bit parallel interface. |
-| 0x01_001C – 0x01_001F  | 0x04007         | **ip36_status** [1..0]                | Read            | Status of the Max10 LEDs through a 36-bit parallel interface. |
+
+| **CPU**                        | **FPGA**           | **Read**                         | **Write**                 |
+|--------------------------------|--------------------|----------------------------------|---------------------------|
+| `0xFF21 0000`                  | `0x4000`           | `Constant[31:0]`                 | Reserved                  |
+| `0xFF21 0004`                  | `0x4001`           | `res[31:4]  => 0 buttons[3:0]`   | Reserved                  |
+| `0xFF21 000C`                  | `0x4002`           | `res[31:10] => 0 switches[9:0]`  | Reserved                  |
+| `0xFF21 0010`                  | `0x4003`           | `res[31:2]  => 0 lp36-stat[1:0]` | Reserved                  |
+| `0xFF21 0014`                  | `0x4004`           | `res[31:1]  => 0 lp36-rdy[0]`    | Reserved                  |
+| `0xFF21 0018 -> 0x00FF21 007C` | `0x4005 -> 0x4079` | Reserved                         | Reserved                  |
+| `0xFF21 0080`                  | `0x4080`           | `res[31:10] => 0 leds[9:0]`      | `res[31:10] leds[9:0]`    |
+| `0xFF21 0084`                  | `0x4081`           | `res[31:4]  => 0 lp36_sel[3:0]`  | `res[31:4] lp36_sel[3:0]` |
+| `0xFF21 0088 -> 0x00FF21 00FC` | `0x4082 -> 0x4100` | Reserved                         | Reserved                  |
+| `0xFF21 0100 -> 0x00FF21 FFFF` | `0x4101 -> 0x43FF` | libre                            | libre                     |
 
 ---
