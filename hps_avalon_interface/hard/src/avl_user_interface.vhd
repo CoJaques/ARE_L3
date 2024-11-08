@@ -75,22 +75,23 @@ architecture rtl of avl_user_interface is
   --| Signals declarations   |--------------------------------------------------------------   
 
   --| Read
+  signal bouttons_s           : std_logic_vector(3 downto 0);
+  signal switches_s           : std_logic_vector(9 downto 0);
+  signal led_reg_s            : std_logic_vector(9 downto 0);
+
   signal readdatavalid_next_s : std_logic;
   signal readdatavalid_reg_s  : std_logic;
   signal readdata_next_s      : std_logic_vector(15 downto 0);
   signal readdata_reg_s       : std_logic_vector(15 downto 0);
-
-  signal bouttons_s           : std_logic_vector(3 downto 0);
-  signal switches_s           : std_logic_vector(9 downto 0);
-  signal lp36_stat_s          : std_logic_vector(1 downto 0);
-
+  
   --| Write
   signal lp36_data_reg_s      : std_logic_vector(15 downto 0);
+
 
 begin
   bouttons_s    <= boutton_i;
   switches_s    <= switch_i;
-  lp36_status_s <= lp36_status_i;
+  led_reg_s     <= "1101010011";
 
     -- Read decoder process
     read_decoder_p : process(all)
@@ -108,10 +109,10 @@ begin
                     readdata_next_s(3 downto 0) <= boutton_s;
                 when SWITCHES_ADDR =>
                     readdata_next_s(9 downto 0) <= switch_i;
-                when LP36_STAT =>
-                    readdata_next_s(9 downto 0) <= led_reg_s; -- WRONG VALUE
+                when LED_ADDR =>
+                    readdata_next_s(9 downto 0) <= led_reg_s;
                 when others =>
-                    readdata_next_s <= OTHERS_VAL_C;
+                    --readdata_next_s <= OTHERS_VAL_C;
             end case;
         end if;
     end process;
@@ -165,11 +166,11 @@ begin
     end process;
 
     -- Output signals from write
-    led_o <= led_reg_s;
+    led_o       <= led_reg_s;
     lp36_data_o <= lp36_data_reg_s;
 
     -- Output signals from read
-    readdata_o <= readdata_reg_s;
+    readdata_o      <= readdata_reg_s;
     readdatavalid_o <= readdatavalid_reg_s;
 
 end rtl;
