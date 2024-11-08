@@ -97,16 +97,11 @@ begin
         if avl_read_i  = '1' then
             readdatavalid_next_s <= '1';
             case to_integer(unsigned(avl_address_i)) is
-                when ID_ADDR =>
-                    readdata_next_s <= ID;
-                when BUTTONS_ADDR =>
-                    readdata_next_s(3 downto 0) <= buttons_s;
-                when SWITCHES_ADDR =>
-                    readdata_next_s(9 downto 0) <= switch_i;
-                when LED_ADDR =>
-                    readdata_next_s(9 downto 0) <= led_reg_s;
-                when others =>
-                    null;
+                when ID_ADDR       => readdata_next_s <= ID;
+                when BUTTONS_ADDR  => readdata_next_s(3 downto 0) <= buttons_s;
+                when SWITCHES_ADDR => readdata_next_s(9 downto 0) <= switch_i;
+                when LED_ADDR      => readdata_next_s(9 downto 0) <= led_reg_s;
+                when others        => null;
             end case;
         end if;
     end process;
@@ -127,11 +122,6 @@ begin
     avl_readdatavalid_o <= readdatavalid_reg_s;
     avl_readdata_o      <= readdata_reg_s;
 
-
-
-
-  
-
     -- | Write
      -- Input signals
 
@@ -143,16 +133,14 @@ begin
         elsif rising_edge(avl_clk_i) then
             if avl_write_i ='1' then
                 case (to_integer(unsigned(avl_address_i))) is
-                    when LED_ADDR =>
-                        led_reg_s <= avl_writedata_i(9 downto 0);
-                    when others =>
-                        null;
+                    when LED_ADDR => led_reg_s <= avl_writedata_i(9 downto 0);
+                    when others   => null;
                 end case;
             end if;
         end if;
     end process;
 
     -- Output signals from write
-    led_o       <= led_reg_s;
+    led_o <= led_reg_s;
 
 end rtl;
