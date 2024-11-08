@@ -76,6 +76,7 @@ architecture rtl of avl_user_interface is
 
     signal lp36_sel_reg_s       : std_logic_vector(lp36_sel_o'range);
     signal lp36_data_reg_s      : std_logic_vector(lp36_data_o'range);
+    signal lp36_status_reg_s    : std_logic_vector(lp36_status_i'range);
 
     signal readdatavalid_next_s : std_logic;
     signal readdatavalid_reg_s  : std_logic;
@@ -89,6 +90,20 @@ begin
     -- -----------------------------------------
     -- Read
     -- -----------------------------------------
+
+    -- Read synchronisation process
+    sync_input_reg: process (avl_clk_i, avl_reset_i)
+    begin
+        if avl_reset_i = '1' then
+            buttons_reg_s      <= (others => '0');
+            switches_reg_s     <= (others => '0');
+            lp36_status_reg_s  <= (others => '0');
+        elsif rising_edge(avl_clk_i) then
+            buttons_reg_s     <= boutton_i;
+            switches_reg_s    <= switch_i;
+            lp36_status_reg_s <= lp36_status_i;
+        end if;
+    end process;
 
     -- Read decoder process
     read_decoder_p : process(all)
