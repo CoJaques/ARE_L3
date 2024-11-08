@@ -145,7 +145,7 @@ begin
                     when LED_ADDR       => led_reg_s   <= avl_writedata_i(led_o'range);
                     when LP36_SEL_ADDR  => lp36_sel_s  <= avl_writedata_i(lp36_sel_o'range);
                     when LP36_DATA_ADDR => lp36_data_s <= avl_writedata_i;
-                    when others   => null;
+                    when others         => null;
                 end case;
             end if;
         end if;
