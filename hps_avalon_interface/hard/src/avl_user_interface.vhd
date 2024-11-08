@@ -111,7 +111,7 @@ begin
                 when LED_ADDR =>
                     readdata_next_s(9 downto 0) <= led_reg_s;
                 when others =>
-                    --readdata_next_s <= OTHERS_VAL_C;
+                    null;
             end case;
         end if;
     end process;
