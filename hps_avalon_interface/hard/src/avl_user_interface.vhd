@@ -60,14 +60,14 @@ architecture rtl of avl_user_interface is
   
   --| Constants declarations |--------------------------------------------------------------
     constant ID               : std_logic_vector(avl_readdata_o'range):= x"1234CAFE";
-    constant ID_ADDR          : integer := 14#0#;
-    constant BUTTONS_ADDR     : integer := 14#1#;
-    constant SWITCHES_ADDR    : integer := 14#3#;
-    constant LP36_STAT        : integer := 14#4#;
-    constant LP36_RDY         : integer := 14#5#;
-    constant LED_ADDR         : integer := 14#20#;
-    constant LP36_SEL_ADDR    : integer := 14#21#;
-    constant LP36_DATA_ADDR   : integer := 14#22#;
+    constant ID_ADDR         : std_logic_vector(13 downto 0) := x"0000";
+    constant BUTTONS_ADDR    : std_logic_vector(13 downto 0) := x"0001";
+    constant SWITCHES_ADDR   : std_logic_vector(13 downto 0) := x"0003";
+    constant LP36_STAT       : std_logic_vector(13 downto 0) := x"0004";
+    constant LP36_RDY        : std_logic_vector(13 downto 0) := x"0005";
+    constant LED_ADDR        : std_logic_vector(13 downto 0) := x"0020";
+    constant LP36_SEL_ADDR   : std_logic_vector(13 downto 0) := x"0021";
+    constant LP36_DATA_ADDR  : std_logic_vector(13 downto 0) := x"0022";
 
   --| Signals declarations   |--------------------------------------------------------------   
     signal buttons_s            : std_logic_vector(boutton_i'range);
@@ -92,7 +92,7 @@ begin
 
         if avl_read_i  = '1' then
             readdatavalid_next_s <= '1';
-            case to_integer(unsigned(avl_address_i)) is
+            case avl_address_i is
                 when ID_ADDR       => readdata_next_s <= ID;
                 when BUTTONS_ADDR  => readdata_next_s(boutton_i'range) <= buttons_s;
                 when SWITCHES_ADDR => readdata_next_s(switch_i'range)  <= switches_s;
@@ -121,7 +121,7 @@ begin
             led_reg_s <= (others => '0');
         elsif rising_edge(avl_clk_i) then
             if avl_write_i ='1' then
-                case (to_integer(unsigned(avl_address_i))) is
+                case avl_address_i is
                     when LED_ADDR => led_reg_s <= avl_writedata_i(led_o'range);
                     when others   => null;
                 end case;
