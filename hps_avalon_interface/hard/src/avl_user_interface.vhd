@@ -92,41 +92,42 @@ begin
   switches_s    <= switch_i;
   lp36_status_s <= lp36_status_i;
 
-  -- Read decoder process
-  read_decoder_p : process(all)
-  begin
+    -- Read decoder process
+    read_decoder_p : process(all)
+    begin
         --| Value by default
-      readdatavalid_next_s <= '0';       
-      readdata_next_s      <= (others => '0');
+        readdatavalid_next_s <= '0';       
+        readdata_next_s      <= (others => '0');
 
-      if read_i='1' then
-          readdatavalid_next_s <= '1';
-          case (to_integer(unsigned(address_i))) is
-              when 0 =>
-                  readdata_next_s <= IP_USER_ID_C;
-              when 1 =>
-                  readdata_next_s(3 downto 0) <= boutton_s;
-              when 2 =>
-                  readdata_next_s(9 downto 0) <= switch_i;
-              when 3 =>
-                  readdata_next_s(9 downto 0) <= led_reg_s;
-              when others =>
-                  readdata_next_s <= OTHERS_VAL_C;
-          end case;
-      end if;
-  end process;
-  
-  -- Read register process
-  read_register_p : process(reset_i, clk_i)
-  begin
-      if reset_i='1' then
-          readdatavalid_reg_s <= '0';
-          readdata_reg_s      <= (others => '0');
-      elsif rising_edge(clk_i) then
-          readdatavalid_reg_s <= readdatavalid_next_s;
-          readdata_reg_s      <= readdata_next_s;
-      end if;
-  end process;
+        if read_i = '1' then
+            readdatavalid_next_s <= '1';
+            case to_integer(unsigned(address_i)) is
+                when ID_ADDR =>
+                    readdata_next_s <= IP_USER_ID_C;
+                when BUTTONS_ADDR =>
+                    readdata_next_s(3 downto 0) <= boutton_s;
+                when SWITCHES_ADDR =>
+                    readdata_next_s(9 downto 0) <= switch_i;
+                when LP36_STAT =>
+                    readdata_next_s(9 downto 0) <= led_reg_s; -- WRONG VALUE
+                when others =>
+                    readdata_next_s <= OTHERS_VAL_C;
+            end case;
+        end if;
+    end process;
+
+    -- Read register process
+    read_register_p : process(reset_i, clk_i)
+    begin
+        if reset_i = '1' then
+            readdatavalid_reg_s <= '0';
+            readdata_reg_s      <= (others => '0');
+        elsif rising_edge(clk_i) then
+            readdatavalid_reg_s <= readdatavalid_next_s;
+            readdata_reg_s      <= readdata_next_s;
+        end if;
+    end process;
+
 
 
 
