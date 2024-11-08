@@ -150,16 +150,8 @@ begin
         elsif rising_edge(clk_i) then
             if write_i='1' then
                 case (to_integer(unsigned(address_i))) is
-                    --when 0 =>     -- read only
-                    --    
-                    --when 1 =>     -- read only
-                    --    
-                    --when 2 =>     -- read only
-                    --    
-                    when 3 =>
+                    when LED_ADDR =>
                         led_reg_s <= writedata_i(9 downto 0);
-                    when 4 =>
-                        lp36_data_reg_s <= writedata_i;
                     when others =>
                         null;
                 end case;
@@ -169,6 +161,5 @@ begin
 
     -- Output signals from write
     led_o       <= led_reg_s;
-    lp36_data_o <= lp36_data_reg_s;
 
 end rtl;
