@@ -59,7 +59,19 @@ architecture rtl of avl_user_interface is
   --| Components declaration |--------------------------------------------------------------
   
   --| Constants declarations |--------------------------------------------------------------
-  
+  -- ID
+  constant ID               : std_logic_vector(avl_readdata_o'range):= x"1234CAFE";
+
+  --| Address
+  constant ID_ADDR          : std_logic_vector(13 downto 0) := "00000000000000";
+  constant BUTTONS_ADDR     : std_logic_vector(13 downto 0) := "00000000000001";
+  constant SWITCHES_ADDR    : std_logic_vector(13 downto 0) := "00000000000002";
+  constant LP36_STAT        : std_logic_vector(13 downto 0) := "00000000000003";
+  constant LP36_RDY         : std_logic_vector(13 downto 0) := "00000000000004";
+  constant LED_ADDR         : std_logic_vector(13 downto 0) := "00000000000080"; --| Write
+  constant LP36_SEL_ADDR    : std_logic_vector(13 downto 0) := "00000000000081";
+  constant LP36_DATA_ADDR   : std_logic_vector(13 downto 0) := "00000000000082";
+
   --| Signals declarations   |--------------------------------------------------------------   
   signal read_data_internal  : std_logic_vector(31 downto 0);
   signal read_valid          : std_logic;
