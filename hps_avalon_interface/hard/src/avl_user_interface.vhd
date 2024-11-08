@@ -98,9 +98,9 @@ begin
             readdatavalid_next_s <= '1';
             case to_integer(unsigned(avl_address_i)) is
                 when ID_ADDR =>
-                    readdata_next_s <= IP_USER_ID_C;
+                    readdata_next_s <= ID;
                 when BUTTONS_ADDR =>
-                    readdata_next_s(3 downto 0) <= button_s;
+                    readdata_next_s(3 downto 0) <= buttons_s;
                 when SWITCHES_ADDR =>
                     readdata_next_s(9 downto 0) <= switch_i;
                 when LED_ADDR =>
