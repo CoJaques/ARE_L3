@@ -63,14 +63,14 @@ architecture rtl of avl_user_interface is
   constant ID               : std_logic_vector(avl_readdata_o'range):= x"1234CAFE";
 
     --| Address
-    constant ID_ADDR          : integer := 16#0#;     -- Adresse 0x00
-    constant BUTTONS_ADDR     : integer := 16#1#;     -- Adresse 0x01
-    constant SWITCHES_ADDR    : integer := 16#2#;     -- Adresse 0x02
-    constant LP36_STAT        : integer := 16#3#;     -- Adresse 0x03
-    constant LP36_RDY         : integer := 16#4#;     -- Adresse 0x04
-    constant LED_ADDR         : integer := 16#80#;    -- Adresse 0x80
-    constant LP36_SEL_ADDR    : integer := 16#81#;    -- Adresse 0x81
-    constant LP36_DATA_ADDR   : integer := 16#82#;    -- Adresse 0x82
+    constant ID_ADDR          : integer := 16#0#;  -- Adresse 0x00
+    constant BUTTONS_ADDR     : integer := 16#1#;  -- Adresse 0x01
+    constant SWITCHES_ADDR    : integer := 16#2#;  -- Adresse 0x02
+    constant LP36_STAT        : integer := 16#3#;  -- Adresse 0x03
+    constant LP36_RDY         : integer := 16#4#;  -- Adresse 0x04
+    constant LED_ADDR         : integer := 16#80#; -- Adresse 0x80
+    constant LP36_SEL_ADDR    : integer := 16#81#; -- Adresse 0x81
+    constant LP36_DATA_ADDR   : integer := 16#82#; -- Adresse 0x82
 
   --| Signals declarations   |--------------------------------------------------------------   
 
