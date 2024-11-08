@@ -74,13 +74,13 @@ architecture rtl of avl_user_interface is
 
   --| Signals declarations   |--------------------------------------------------------------   
 
-  signal buttons_s            : std_logic_vector(3 downto 0);
-  signal switches_s           : std_logic_vector(9 downto 0);
-  signal led_reg_s            : std_logic_vector(9 downto 0);
+  signal buttons_s            : std_logic_vector(boutton_i'range);
+  signal switches_s           : std_logic_vector(switch_i'range);
+  signal led_reg_s            : std_logic_vector(led_o'range);
   signal readdatavalid_next_s : std_logic;
   signal readdatavalid_reg_s  : std_logic;
-  signal readdata_next_s      : std_logic_vector(31 downto 0);
-  signal readdata_reg_s       : std_logic_vector(31 downto 0);
+  signal readdata_next_s      : std_logic_vector(avl_readdata_o'range);
+  signal readdata_reg_s       : std_logic_vector(avl_readdata_o'range);
 
 begin
   buttons_s  <= boutton_i;
@@ -98,9 +98,9 @@ begin
             readdatavalid_next_s <= '1';
             case to_integer(unsigned(avl_address_i)) is
                 when ID_ADDR       => readdata_next_s <= ID;
-                when BUTTONS_ADDR  => readdata_next_s(3 downto 0) <= buttons_s;
-                when SWITCHES_ADDR => readdata_next_s(9 downto 0) <= switches_s;
-                when LED_ADDR      => readdata_next_s(9 downto 0) <= led_reg_s;
+                when BUTTONS_ADDR  => readdata_next_s(boutton_i'range) <= buttons_s;
+                when SWITCHES_ADDR => readdata_next_s(switch_i'range)  <= switches_s;
+                when LED_ADDR      => readdata_next_s(led_o'range)     <= led_reg_s;
                 when others        => null;
             end case;
         end if;
@@ -133,7 +133,7 @@ begin
         elsif rising_edge(avl_clk_i) then
             if avl_write_i ='1' then
                 case (to_integer(unsigned(avl_address_i))) is
-                    when LED_ADDR => led_reg_s <= avl_writedata_i(9 downto 0);
+                    when LED_ADDR => led_reg_s <= avl_writedata_i(led_o'range);
                     when others   => null;
                 end case;
             end if;
