@@ -79,8 +79,8 @@ architecture rtl of avl_user_interface is
   signal led_reg_s            : std_logic_vector(9 downto 0);
   signal readdatavalid_next_s : std_logic;
   signal readdatavalid_reg_s  : std_logic;
-  signal readdata_next_s      : std_logic_vector(15 downto 0);
-  signal readdata_reg_s       : std_logic_vector(15 downto 0);
+  signal readdata_next_s      : std_logic_vector(31 downto 0);
+  signal readdata_reg_s       : std_logic_vector(31 downto 0);
 
 begin
   buttons_s  <= boutton_i;
