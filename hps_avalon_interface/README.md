@@ -45,7 +45,8 @@ Since the bus is 32-bit, the two most significant bits (MSBs) are not used for a
 | `0xFF21 0018 -> 0x00FF21 007C` | `0x4005 -> 0x4079` | Reserved                         | Reserved                  |
 | `0xFF21 0080`                  | `0x4080`           | `res[31:10] => 0 leds[9:0]`      | `res[31:10] leds[9:0]`    |
 | `0xFF21 0084`                  | `0x4081`           | `res[31:4]  => 0 lp36_sel[3:0]`  | `res[31:4] lp36_sel[3:0]` |
-| `0xFF21 0088 -> 0x00FF21 00FC` | `0x4082 -> 0x4100` | Reserved                         | Reserved                  |
+| `0xFF21 0088 | `0x4082 -> 0x4100` | Reserved                         | Reserved                  |
+| `0xFF21 008C -> 0x00FF21 00FC` | `0x4082 -> 0x4100` | Reserved                         | Reserved                  |
 | `0xFF21 0100 -> 0x00FF21 FFFF` | `0x4101 -> 0x43FF` | libre                            | libre                     |
 
 ---
