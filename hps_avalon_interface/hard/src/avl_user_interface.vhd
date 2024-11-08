@@ -86,6 +86,10 @@ begin
     buttons_reg_s  <= boutton_i;
     switches_reg_s <= switch_i;
 
+    -- -----------------------------------------
+    -- Read
+    -- -----------------------------------------
+
     -- Read decoder process
     read_decoder_p : process(all)
     begin
@@ -119,6 +123,10 @@ begin
         end if;
     end process;
 
+    -- -----------------------------------------
+    -- Write
+    -- -----------------------------------------
+
     -- Write channel with register
     write_register_p : process(avl_reset_i, avl_clk_i)
     begin
@@ -143,7 +151,9 @@ begin
         end if;
     end process;
 
+    -- -----------------------------------------
     -- Output signals
+    -- -----------------------------------------
     avl_readdatavalid_o <= readdatavalid_reg_s;
     avl_readdata_o      <= readdata_reg_s;
     led_o               <= led_reg_s;
