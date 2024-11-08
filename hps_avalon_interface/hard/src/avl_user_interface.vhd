@@ -74,8 +74,8 @@ architecture rtl of avl_user_interface is
     signal switches_reg_s       : std_logic_vector(switch_i'range);
     signal led_reg_s            : std_logic_vector(led_o'range);
 
-    signal lp36_sel_s           : std_logic_vector(lp36_sel_o'range);
-    signal lp36_data_s          : std_logic_vector(lp36_data_o'range);
+    signal lp36_sel_reg_s       : std_logic_vector(lp36_sel_o'range);
+    signal lp36_data_reg_s      : std_logic_vector(lp36_data_o'range);
 
     signal readdatavalid_next_s : std_logic;
     signal readdatavalid_reg_s  : std_logic;
@@ -104,8 +104,8 @@ begin
                 when BUTTONS_ADDR   => readdata_next_s(boutton_i'range)   <= buttons_reg_s;
                 when SWITCHES_ADDR  => readdata_next_s(switch_i'range)    <= switches_reg_s;
                 when LED_ADDR       => readdata_next_s(led_o'range)       <= led_reg_s;
-                when LP36_SEL_ADDR  => readdata_next_s(lp36_sel_o'range)  <= lp36_sel_s;
-                when LP36_DATA_ADDR => readdata_next_s(lp36_data_o'range) <= lp36_data_s;
+                when LP36_SEL_ADDR  => readdata_next_s(lp36_sel_o'range)  <= lp36_sel_reg_s;
+                when LP36_DATA_ADDR => readdata_next_s(lp36_data_o'range) <= lp36_data_reg_s;
                 when others         => null;
             end case;
         end if;
@@ -131,20 +131,20 @@ begin
     write_register_p : process(avl_reset_i, avl_clk_i)
     begin
         --| Value by default
-        led_reg_s   <= led_reg_s;
-        lp36_sel_s  <= lp36_sel_s;
-        lp36_data_s <= lp36_data_s;
+        led_reg_s       <= led_reg_s;
+        lp36_sel_reg_s  <= lp36_sel_reg_s;
+        lp36_data_reg_s <= lp36_data_reg_s;
 
         if avl_reset_i='1' then
-            led_reg_s   <= (others => '0');
-            lp36_sel_s  <= (others => '0');
-            lp36_data_s <= (others => '0');
+            led_reg_s       <= (others => '0');
+            lp36_sel_reg_s  <= (others => '0');
+            lp36_data_reg_s <= (others => '0');
         elsif rising_edge(avl_clk_i) then
             if avl_write_i ='1' then
                 case avl_address_i is
-                    when LED_ADDR       => led_reg_s   <= avl_writedata_i(led_o'range);
-                    when LP36_SEL_ADDR  => lp36_sel_s  <= avl_writedata_i(lp36_sel_o'range);
-                    when LP36_DATA_ADDR => lp36_data_s <= avl_writedata_i;
+                    when LED_ADDR       => led_reg_s       <= avl_writedata_i(led_o'range);
+                    when LP36_SEL_ADDR  => lp36_sel_reg_s  <= avl_writedata_i(lp36_sel_o'range);
+                    when LP36_DATA_ADDR => lp36_data_reg_s <= avl_writedata_i;
                     when others         => null;
                 end case;
             end if;
@@ -157,6 +157,6 @@ begin
     avl_readdatavalid_o <= readdatavalid_reg_s;
     avl_readdata_o      <= readdata_reg_s;
     led_o               <= led_reg_s;
-    lp36_sel_o          <= lp36_sel_s;
-    lp36_data_o         <= lp36_data_s;
+    lp36_sel_o          <= lp36_sel_reg_s;
+    lp36_data_o         <= lp36_data_reg_s;
 end rtl;
