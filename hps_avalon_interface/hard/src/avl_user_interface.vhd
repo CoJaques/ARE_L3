@@ -124,9 +124,8 @@ begin
     end process;
 
     -- Output signals from read
-    avl_readdata_o      <= readdata_reg_s;
     avl_readdatavalid_o <= readdatavalid_reg_s;
-
+    avl_readdata_o      <= readdata_reg_s;
 
 
 
