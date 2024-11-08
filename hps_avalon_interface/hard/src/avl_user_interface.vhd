@@ -59,15 +59,15 @@ architecture rtl of avl_user_interface is
   --| Components declaration |--------------------------------------------------------------
   
   --| Constants declarations |--------------------------------------------------------------
-    constant ID               : std_logic_vector(avl_readdata_o'range):= x"1234CAFE";
-    constant ID_ADDR         : std_logic_vector(13 downto 0) := x"0000";
-    constant BUTTONS_ADDR    : std_logic_vector(13 downto 0) := x"0001";
-    constant SWITCHES_ADDR   : std_logic_vector(13 downto 0) := x"0003";
-    constant LP36_STAT       : std_logic_vector(13 downto 0) := x"0004";
-    constant LP36_RDY        : std_logic_vector(13 downto 0) := x"0005";
-    constant LED_ADDR        : std_logic_vector(13 downto 0) := x"0020";
-    constant LP36_SEL_ADDR   : std_logic_vector(13 downto 0) := x"0021";
-    constant LP36_DATA_ADDR  : std_logic_vector(13 downto 0) := x"0022";
+    constant ID              : std_logic_vector(avl_readdata_o'range) := x"1234CAFE";
+    constant ID_ADDR         : std_logic_vector(avl_address_i'range)  := "00" & x"000";
+    constant BUTTONS_ADDR    : std_logic_vector(avl_address_i'range)  := "00" & x"001";
+    constant SWITCHES_ADDR   : std_logic_vector(avl_address_i'range)  := "00" & x"003";
+    constant LP36_STAT       : std_logic_vector(avl_address_i'range)  := "00" & x"004";
+    constant LP36_RDY        : std_logic_vector(avl_address_i'range)  := "00" & x"005";
+    constant LED_ADDR        : std_logic_vector(avl_address_i'range)  := "00" & x"020";
+    constant LP36_SEL_ADDR   : std_logic_vector(avl_address_i'range)  := "00" & x"021";
+    constant LP36_DATA_ADDR  : std_logic_vector(avl_address_i'range)  := "00" & x"022";
 
   --| Signals declarations   |--------------------------------------------------------------   
     signal buttons_s            : std_logic_vector(boutton_i'range);
