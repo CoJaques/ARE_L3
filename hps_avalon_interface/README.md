@@ -49,3 +49,10 @@ Since the bus is 32-bit, the two most significant bits (MSBs) are not used for a
 | `0xFF21 0100 -> 0x00FF21 FFFF` | `0x4101 -> 0x43FF` | libre                            | libre                     |
 
 ---
+
+# TODO 
+
+- Répondre correctement à la question 1
+- Synchroniser les entrées
+- Reprendre les process dispo sur cyberlearn
+- Finir les schema bloc
