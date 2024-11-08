@@ -55,8 +55,6 @@ entity avl_user_interface is
 end avl_user_interface;
 
 architecture rtl of avl_user_interface is
-
-  --| Components declaration |--------------------------------------------------------------
   
   --| Constants declarations |--------------------------------------------------------------
     constant ID              : std_logic_vector(avl_readdata_o'range) := x"1234CAFE";
