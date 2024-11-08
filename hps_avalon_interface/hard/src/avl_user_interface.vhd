@@ -62,43 +62,43 @@ architecture rtl of avl_user_interface is
   -- ID
   constant ID               : std_logic_vector(avl_readdata_o'range):= x"1234CAFE";
 
-  --| Address
-  constant ID_ADDR          : std_logic_vector(13 downto 0) := "00000000000000";
-  constant BUTTONS_ADDR     : std_logic_vector(13 downto 0) := "00000000000001";
-  constant SWITCHES_ADDR    : std_logic_vector(13 downto 0) := "00000000000002";
-  constant LP36_STAT        : std_logic_vector(13 downto 0) := "00000000000003";
-  constant LP36_RDY         : std_logic_vector(13 downto 0) := "00000000000004";
-  constant LED_ADDR         : std_logic_vector(13 downto 0) := "00000000000080"; --| Write
-  constant LP36_SEL_ADDR    : std_logic_vector(13 downto 0) := "00000000000081";
-  constant LP36_DATA_ADDR   : std_logic_vector(13 downto 0) := "00000000000082";
+    --| Address
+    constant ID_ADDR          : integer := 16#0#;     -- Adresse 0x00
+    constant BUTTONS_ADDR     : integer := 16#1#;     -- Adresse 0x01
+    constant SWITCHES_ADDR    : integer := 16#2#;     -- Adresse 0x02
+    constant LP36_STAT        : integer := 16#3#;     -- Adresse 0x03
+    constant LP36_RDY         : integer := 16#4#;     -- Adresse 0x04
+    constant LED_ADDR         : integer := 16#80#;    -- Adresse 0x80
+    constant LP36_SEL_ADDR    : integer := 16#81#;    -- Adresse 0x81
+    constant LP36_DATA_ADDR   : integer := 16#82#;    -- Adresse 0x82
 
   --| Signals declarations   |--------------------------------------------------------------   
 
   --| Read
-  signal boutton_s : std_logic_vector(3 downto 0);
   signal readdatavalid_next_s : std_logic;
-  signal readdatavalid_reg_s : std_logic;
-  signal readdata_next_s : std_logic_vector(15 downto 0);
-  signal readdata_reg_s : std_logic_vector(15 downto 0);
-  signal led_reg_s : std_logic_vector(9 downto 0);
+  signal readdatavalid_reg_s  : std_logic;
+  signal readdata_next_s      : std_logic_vector(15 downto 0);
+  signal readdata_reg_s       : std_logic_vector(15 downto 0);
+
+  signal bouttons_s           : std_logic_vector(3 downto 0);
+  signal switches_s           : std_logic_vector(9 downto 0);
+  signal lp36_stat_s          : std_logic_vector(1 downto 0);
 
   --| Write
-  signal led_reg_s        : std_logic_vector(9 downto 0);
-  signal lp36_data_reg_s  : std_logic_vector(15 downto 0);
+  signal lp36_data_reg_s      : std_logic_vector(15 downto 0);
 
 begin
-  
-  -- Input signals
-  boutton_s <= not nBoutton_i;     -- Boutton_i is active low
-
-  -- affecte une valeur pour les led_reg_s
-  led_reg_s <= "1101010011";
+  bouttons_s    <= boutton_i;
+  switches_s    <= switch_i;
+  lp36_status_s <= lp36_status_i;
 
   -- Read decoder process
   read_decoder_p : process(all)
   begin
-      readdatavalid_next_s <= '0';        --valeur par defaut
-      readdata_next_s <= (others => '0'); --valeur par defaut
+        --| Value by default
+      readdatavalid_next_s <= '0';       
+      readdata_next_s      <= (others => '0');
+
       if read_i='1' then
           readdatavalid_next_s <= '1';
           case (to_integer(unsigned(address_i))) is
@@ -121,10 +121,10 @@ begin
   begin
       if reset_i='1' then
           readdatavalid_reg_s <= '0';
-          readdata_reg_s <= (others => '0');
+          readdata_reg_s      <= (others => '0');
       elsif rising_edge(clk_i) then
           readdatavalid_reg_s <= readdatavalid_next_s;
-          readdata_reg_s <= readdata_next_s;
+          readdata_reg_s      <= readdata_next_s;
       end if;
   end process;
 
