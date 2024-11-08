@@ -59,28 +59,24 @@ architecture rtl of avl_user_interface is
   --| Components declaration |--------------------------------------------------------------
   
   --| Constants declarations |--------------------------------------------------------------
-    -- ID
     constant ID               : std_logic_vector(avl_readdata_o'range):= x"1234CAFE";
-
-    --| Address
-    constant ID_ADDR          : integer := 16#0#;
-    constant BUTTONS_ADDR     : integer := 16#1#;
-    constant SWITCHES_ADDR    : integer := 16#3#;
-    constant LP36_STAT        : integer := 16#4#;
-    constant LP36_RDY         : integer := 16#5#;
-    constant LED_ADDR         : integer := 16#20#;
-    constant LP36_SEL_ADDR    : integer := 16#21#;
-    constant LP36_DATA_ADDR   : integer := 16#22#;
+    constant ID_ADDR          : integer := 14#0#;
+    constant BUTTONS_ADDR     : integer := 14#1#;
+    constant SWITCHES_ADDR    : integer := 14#3#;
+    constant LP36_STAT        : integer := 14#4#;
+    constant LP36_RDY         : integer := 14#5#;
+    constant LED_ADDR         : integer := 14#20#;
+    constant LP36_SEL_ADDR    : integer := 14#21#;
+    constant LP36_DATA_ADDR   : integer := 14#22#;
 
   --| Signals declarations   |--------------------------------------------------------------   
-
-  signal buttons_s            : std_logic_vector(boutton_i'range);
-  signal switches_s           : std_logic_vector(switch_i'range);
-  signal led_reg_s            : std_logic_vector(led_o'range);
-  signal readdatavalid_next_s : std_logic;
-  signal readdatavalid_reg_s  : std_logic;
-  signal readdata_next_s      : std_logic_vector(avl_readdata_o'range);
-  signal readdata_reg_s       : std_logic_vector(avl_readdata_o'range);
+    signal buttons_s            : std_logic_vector(boutton_i'range);
+    signal switches_s           : std_logic_vector(switch_i'range);
+    signal led_reg_s            : std_logic_vector(led_o'range);
+    signal readdatavalid_next_s : std_logic;
+    signal readdatavalid_reg_s  : std_logic;
+    signal readdata_next_s      : std_logic_vector(avl_readdata_o'range);
+    signal readdata_reg_s       : std_logic_vector(avl_readdata_o'range);
 
 begin
   buttons_s  <= boutton_i;
@@ -118,13 +114,6 @@ begin
         end if;
     end process;
 
-    -- Output signals from read
-    avl_readdatavalid_o <= readdatavalid_reg_s;
-    avl_readdata_o      <= readdata_reg_s;
-
-    -- | Write
-     -- Input signals
-
     -- Write channel with register
     write_register_p : process(avl_reset_i, avl_clk_i)
     begin
@@ -140,7 +129,9 @@ begin
         end if;
     end process;
 
-    -- Output signals from write
-    led_o <= led_reg_s;
+    -- Output signals
+    avl_readdatavalid_o <= readdatavalid_reg_s;
+    avl_readdata_o      <= readdata_reg_s;
+    led_o               <= led_reg_s;
 
 end rtl;
