@@ -70,8 +70,8 @@ architecture rtl of avl_user_interface is
     constant LP36_DATA_ADDR  : std_logic_vector(avl_address_i'range)  := "00" & x"022";
 
   --| Signals declarations   |--------------------------------------------------------------   
-    signal buttons_s            : std_logic_vector(boutton_i'range);
-    signal switches_s           : std_logic_vector(switch_i'range);
+    signal buttons_reg_s        : std_logic_vector(boutton_i'range);
+    signal switches_reg_s       : std_logic_vector(switch_i'range);
     signal led_reg_s            : std_logic_vector(led_o'range);
 
     signal lp36_sel_s           : std_logic_vector(lp36_sel_o'range);
@@ -83,8 +83,8 @@ architecture rtl of avl_user_interface is
     signal readdata_reg_s       : std_logic_vector(avl_readdata_o'range);
 
 begin
-  buttons_s  <= boutton_i;
-  switches_s <= switch_i;
+    buttons_reg_s  <= boutton_i;
+    switches_reg_s <= switch_i;
 
     -- Read decoder process
     read_decoder_p : process(all)
@@ -97,8 +97,8 @@ begin
             readdatavalid_next_s <= '1';
             case avl_address_i is
                 when ID_ADDR        => readdata_next_s <= ID;
-                when BUTTONS_ADDR   => readdata_next_s(boutton_i'range)   <= buttons_s;
-                when SWITCHES_ADDR  => readdata_next_s(switch_i'range)    <= switches_s;
+                when BUTTONS_ADDR   => readdata_next_s(boutton_i'range)   <= buttons_reg_s;
+                when SWITCHES_ADDR  => readdata_next_s(switch_i'range)    <= switches_reg_s;
                 when LED_ADDR       => readdata_next_s(led_o'range)       <= led_reg_s;
                 when LP36_SEL_ADDR  => readdata_next_s(lp36_sel_o'range)  <= lp36_sel_s;
                 when LP36_DATA_ADDR => readdata_next_s(lp36_data_o'range) <= lp36_data_s;
