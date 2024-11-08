@@ -99,7 +99,7 @@ begin
             case to_integer(unsigned(avl_address_i)) is
                 when ID_ADDR       => readdata_next_s <= ID;
                 when BUTTONS_ADDR  => readdata_next_s(3 downto 0) <= buttons_s;
-                when SWITCHES_ADDR => readdata_next_s(9 downto 0) <= switch_s;
+                when SWITCHES_ADDR => readdata_next_s(9 downto 0) <= switches_s;
                 when LED_ADDR      => readdata_next_s(9 downto 0) <= led_reg_s;
                 when others        => null;
             end case;
