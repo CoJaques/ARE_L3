@@ -87,7 +87,6 @@ architecture rtl of avl_user_interface is
   --| Write
   signal lp36_data_reg_s      : std_logic_vector(15 downto 0);
 
-
 begin
   bouttons_s    <= boutton_i;
   switches_s    <= switch_i;
@@ -129,6 +128,9 @@ begin
         end if;
     end process;
 
+    -- Output signals from read
+    readdata_o      <= readdata_reg_s;
+    readdatavalid_o <= readdatavalid_reg_s;
 
 
 
@@ -168,9 +170,5 @@ begin
     -- Output signals from write
     led_o       <= led_reg_s;
     lp36_data_o <= lp36_data_reg_s;
-
-    -- Output signals from read
-    readdata_o      <= readdata_reg_s;
-    readdatavalid_o <= readdatavalid_reg_s;
 
 end rtl;
