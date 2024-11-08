@@ -59,8 +59,8 @@ architecture rtl of avl_user_interface is
   --| Components declaration |--------------------------------------------------------------
   
   --| Constants declarations |--------------------------------------------------------------
-  -- ID
-  constant ID               : std_logic_vector(avl_readdata_o'range):= x"1234CAFE";
+    -- ID
+    constant ID               : std_logic_vector(avl_readdata_o'range):= x"1234CAFE";
 
     --| Address
     constant ID_ADDR          : integer := 16#0#;  -- Adresse 0x00
