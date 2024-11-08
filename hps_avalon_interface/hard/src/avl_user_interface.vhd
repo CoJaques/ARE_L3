@@ -128,7 +128,9 @@ begin
         lp36_data_s <= lp36_data_s;
 
         if avl_reset_i='1' then
-            led_reg_s <= (others => '0');
+            led_reg_s   <= (others => '0');
+            lp36_sel_s  <= (others => '0');
+            lp36_data_s <= (others => '0');
         elsif rising_edge(avl_clk_i) then
             if avl_write_i ='1' then
                 case avl_address_i is
