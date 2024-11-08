@@ -73,140 +73,102 @@ architecture rtl of avl_user_interface is
   constant LP36_DATA_ADDR   : std_logic_vector(13 downto 0) := "00000000000082";
 
   --| Signals declarations   |--------------------------------------------------------------   
-  signal read_data_internal  : std_logic_vector(31 downto 0);
-  signal read_valid          : std_logic;
-  signal user_id             : std_logic_vector(31 downto 0) := x"CAFEBABE"; -- Sample user ID
-  signal buttons             : std_logic_vector(3 downto 0);
-  signal switches            : std_logic_vector(9 downto 0);
-  signal leds                : std_logic_vector(9 downto 0);
-  signal parallel_we         : std_logic;
-  signal parallel_sel        : std_logic_vector(3 downto 0);
-  signal parallel_data       : std_logic_vector(31 downto 0);
-  signal decoded_address     : std_logic_vector(13 downto 0);
+
+  --| Read
+  signal boutton_s : std_logic_vector(3 downto 0);
+  signal readdatavalid_next_s : std_logic;
+  signal readdatavalid_reg_s : std_logic;
+  signal readdata_next_s : std_logic_vector(15 downto 0);
+  signal readdata_reg_s : std_logic_vector(15 downto 0);
+  signal led_reg_s : std_logic_vector(9 downto 0);
+
+  --| Write
+  signal led_reg_s        : std_logic_vector(9 downto 0);
+  signal lp36_data_reg_s  : std_logic_vector(15 downto 0);
 
 begin
+  
+  -- Input signals
+  boutton_s <= not nBoutton_i;     -- Boutton_i is active low
 
-  -- Read access part
-  process(avl_clk_i)
-  begin
-      if rising_edge(avl_clk_i) then
-          if avl_read_i = '1' then
-              case decoded_address is
-                  when x"010000" =>  -- Interface user ID (32-bit)
-                      read_data_internal <= user_id;
-                  when x"010004" =>  -- Read DE1-SoC Buttons (4 Keys)
-                      read_data_internal(3 downto 0) <= boutton_i;
-                      read_data_internal(31 downto 4) <= (others => '0');  -- Padding for unused bits
-                  when x"010008" =>  -- Read DE1-SoC Switches (10 Switches)
-                      read_data_internal(9 downto 0) <= switch_i;
-                      read_data_internal(31 downto 10) <= (others => '0');  -- Padding for unused bits
-                  when x"01000C" =>  -- Read DE1-SoC LEDs (10 LEDs)
-                      read_data_internal(9 downto 0) <= led_o;
-                      read_data_internal(31 downto 10) <= (others => '0');  -- Padding for unused bits
-                  when x"010020" =>  -- Read Max10 status
-                      read_data_internal(1 downto 0) <= lp36_status_i;
-                      read_data_internal(31 downto 2) <= (others => '0');  -- Padding for unused bits
-                  when others =>
-                      read_data_internal <= (others => '0');  -- Default read value
-              end case;
-              read_valid <= '1';
-          else
-              read_valid <= '0';
-          end if;
-      end if;
-  end process;
+  -- affecte une valeur pour les led_reg_s
+  led_reg_s <= "1101010011";
 
-  -- Write access part
-  process(avl_clk_i, avl_reset_i)
+  -- Read decoder process
+  read_decoder_p : process(all)
   begin
-      if avl_reset_i = '1' then
-          -- Reset all outputs
-          led_o         <= (others => '0');
-          parallel_we   <= '0';
-          parallel_sel  <= (others => '0');
-          parallel_data <= (others => '0');
-      elsif rising_edge(avl_clk_i) then
-          if avl_write_i = '1' then
-              case decoded_address is
-                  when x"010004" =>  -- DE1-SoC Buttons (4 Keys)
-                      buttons <= avl_writedata_i(3 downto 0);
-                  when x"010008" =>  -- DE1-SoC Switches (10 Switches)
-                      switches <= avl_writedata_i(9 downto 0);
-                  when x"01000C" =>  -- DE1-SoC LEDs (10 LEDs)
-                      leds <= avl_writedata_i(9 downto 0);
-                  when x"010020" =>  -- Max10 LEDs (Parallel Interface)
-                      parallel_we <= '1';
-                      parallel_sel <= avl_writedata_i(3 downto 0); -- Select LED group
-                      parallel_data <= avl_writedata_i;  -- Write data to Max10 LEDs
-                  when others =>
-                      parallel_we <= '0';  -- Disable write for unknown addresses
-              end case;
-          end if;
-      end if;
-  end process;
-
-  -- Interface management
-  process(avl_clk_i)
-  begin
-      if rising_edge(avl_clk_i) then
-          if parallel_we = '1' then
-              -- Send data to Max10 LEDs
-              lp36_we_o   <= '1';
-              lp36_sel_o  <= parallel_sel;
-              lp36_data_o <= parallel_data;
-          else
-              lp36_we_o   <= '0';
-              lp36_sel_o  <= (others => '0');
-              lp36_data_o <= (others => '0');
-          end if;
+      readdatavalid_next_s <= '0';        --valeur par defaut
+      readdata_next_s <= (others => '0'); --valeur par defaut
+      if read_i='1' then
+          readdatavalid_next_s <= '1';
+          case (to_integer(unsigned(address_i))) is
+              when 0 =>
+                  readdata_next_s <= IP_USER_ID_C;
+              when 1 =>
+                  readdata_next_s(3 downto 0) <= boutton_s;
+              when 2 =>
+                  readdata_next_s(9 downto 0) <= switch_i;
+              when 3 =>
+                  readdata_next_s(9 downto 0) <= led_reg_s;
+              when others =>
+                  readdata_next_s <= OTHERS_VAL_C;
+          end case;
       end if;
   end process;
   
-  -- Multiplexer Process: Handles selection of peripheral based on address
-  process(avl_address_i)
+  -- Read register process
+  read_register_p : process(reset_i, clk_i)
   begin
-      case avl_address_i is
-          when x"010000" => 
-              decoded_address <= x"010000";  -- User ID access
-          when x"010004" =>
-              decoded_address <= x"010004";  -- Button access
-          when x"010008" =>
-              decoded_address <= x"010008";  -- Switch access
-          when x"01000C" =>
-              decoded_address <= x"01000C";  -- LED access
-          when x"010020" =>
-              decoded_address <= x"010020";  -- Max10 LED access
-          when others =>
-              decoded_address <= (others => '0'); -- Default case
-      end case;
+      if reset_i='1' then
+          readdatavalid_reg_s <= '0';
+          readdata_reg_s <= (others => '0');
+      elsif rising_edge(clk_i) then
+          readdatavalid_reg_s <= readdatavalid_next_s;
+          readdata_reg_s <= readdata_next_s;
+      end if;
   end process;
+
+
+
+
+
   
-  -- Decoder Process: Decodes the address and sends it to appropriate process
-  process(avl_address_i)
-  begin
-      -- Based on decoded address, the relevant signals will be controlled
-      case decoded_address is
-          when x"010000" =>  -- User ID
-              read_data_internal <= user_id;
-          when x"010004" =>  -- Buttons
-              read_data_internal(3 downto 0) <= boutton_i;
-          when x"010008" =>  -- Switches
-              read_data_internal(9 downto 0) <= switch_i;
-          when x"01000C" =>  -- LEDs
-              led_o <= avl_writedata_i(9 downto 0);
-          when x"010020" =>  -- Max10 LEDs
-              lp36_we_o <= avl_write_i;
-              lp36_sel_o <= avl_writedata_i(3 downto 0);
-          when others =>
-              -- Default case, do nothing
-              lp36_we_o <= '0';
-      end case;
-  end process;
 
-  -- Output the read data and read valid signal
-  avl_readdatavalid_o <= read_valid;
-  avl_readdata_o      <= read_data_internal;
+    -- | Write
+     -- Input signals
 
-  -- Waitrequest is not used
-  avl_waitrequest_o <= '0';
+    -- Write channel with register
+    write_register_p : process(reset_i, clk_i)
+    begin
+        if reset_i='1' then
+            led_reg_s <= (others => '0');
+            lp36_data_reg_s <= (others => '0');
+        elsif rising_edge(clk_i) then
+            if write_i='1' then
+                case (to_integer(unsigned(address_i))) is
+                    --when 0 =>     -- read only
+                    --    
+                    --when 1 =>     -- read only
+                    --    
+                    --when 2 =>     -- read only
+                    --    
+                    when 3 =>
+                        led_reg_s <= writedata_i(9 downto 0);
+                    when 4 =>
+                        lp36_data_reg_s <= writedata_i;
+                    when others =>
+                        null;
+                end case;
+            end if;
+        end if;
+    end process;
+
+    -- Output signals from write
+    led_o <= led_reg_s;
+    lp36_data_o <= lp36_data_reg_s;
+
+    -- Output signals from read
+    readdata_o <= readdata_reg_s;
+    readdatavalid_o <= readdatavalid_reg_s;
+
 end rtl;
