@@ -74,7 +74,7 @@ architecture rtl of avl_user_interface is
 
   --| Signals declarations   |--------------------------------------------------------------   
 
-  signal bouttons_s           : std_logic_vector(3 downto 0);
+  signal buttons_s            : std_logic_vector(3 downto 0);
   signal switches_s           : std_logic_vector(9 downto 0);
   signal led_reg_s            : std_logic_vector(9 downto 0);
   signal readdatavalid_next_s : std_logic;
@@ -83,9 +83,9 @@ architecture rtl of avl_user_interface is
   signal readdata_reg_s       : std_logic_vector(15 downto 0);
 
 begin
-  bouttons_s    <= boutton_i;
-  switches_s    <= switch_i;
-  led_reg_s     <= "1101010011";
+  buttons_s  <= boutton_i;
+  switches_s <= switch_i;
+  led_reg_s  <= "1101010011";
 
     -- Read decoder process
     read_decoder_p : process(all)
@@ -94,13 +94,13 @@ begin
         readdatavalid_next_s <= '0';       
         readdata_next_s      <= (others => '0');
 
-        if read_i = '1' then
+        if avl_read_i  = '1' then
             readdatavalid_next_s <= '1';
-            case to_integer(unsigned(address_i)) is
+            case to_integer(unsigned(avl_address_i)) is
                 when ID_ADDR =>
                     readdata_next_s <= IP_USER_ID_C;
                 when BUTTONS_ADDR =>
-                    readdata_next_s(3 downto 0) <= boutton_s;
+                    readdata_next_s(3 downto 0) <= button_s;
                 when SWITCHES_ADDR =>
                     readdata_next_s(9 downto 0) <= switch_i;
                 when LED_ADDR =>
@@ -112,20 +112,20 @@ begin
     end process;
 
     -- Read register process
-    read_register_p : process(reset_i, clk_i)
+    read_register_p : process(avl_reset_i, avl_clk_i)
     begin
-        if reset_i = '1' then
+        if avl_reset_i = '1' then
             readdatavalid_reg_s <= '0';
             readdata_reg_s      <= (others => '0');
-        elsif rising_edge(clk_i) then
+        elsif rising_edge(avl_clk_i) then
             readdatavalid_reg_s <= readdatavalid_next_s;
             readdata_reg_s      <= readdata_next_s;
         end if;
     end process;
 
     -- Output signals from read
-    readdata_o      <= readdata_reg_s;
-    readdatavalid_o <= readdatavalid_reg_s;
+    avl_readdata_o      <= readdata_reg_s;
+    avl_readdatavalid_o <= readdatavalid_reg_s;
 
 
 
@@ -137,15 +137,15 @@ begin
      -- Input signals
 
     -- Write channel with register
-    write_register_p : process(reset_i, clk_i)
+    write_register_p : process(avl_reset_i, avl_clk_i)
     begin
-        if reset_i='1' then
+        if avl_reset_i='1' then
             led_reg_s <= (others => '0');
-        elsif rising_edge(clk_i) then
-            if write_i='1' then
-                case (to_integer(unsigned(address_i))) is
+        elsif rising_edge(avl_clk_i) then
+            if avl_write_i ='1' then
+                case (to_integer(unsigned(avl_address_i))) is
                     when LED_ADDR =>
-                        led_reg_s <= writedata_i(9 downto 0);
+                        led_reg_s <= avl_writedata_i(9 downto 0);
                     when others =>
                         null;
                 end case;
