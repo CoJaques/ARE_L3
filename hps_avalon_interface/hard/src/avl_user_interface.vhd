@@ -74,18 +74,13 @@ architecture rtl of avl_user_interface is
 
   --| Signals declarations   |--------------------------------------------------------------   
 
-  --| Read
   signal bouttons_s           : std_logic_vector(3 downto 0);
   signal switches_s           : std_logic_vector(9 downto 0);
   signal led_reg_s            : std_logic_vector(9 downto 0);
-
   signal readdatavalid_next_s : std_logic;
   signal readdatavalid_reg_s  : std_logic;
   signal readdata_next_s      : std_logic_vector(15 downto 0);
   signal readdata_reg_s       : std_logic_vector(15 downto 0);
-  
-  --| Write
-  signal lp36_data_reg_s      : std_logic_vector(15 downto 0);
 
 begin
   bouttons_s    <= boutton_i;
@@ -146,7 +141,6 @@ begin
     begin
         if reset_i='1' then
             led_reg_s <= (others => '0');
-            lp36_data_reg_s <= (others => '0');
         elsif rising_edge(clk_i) then
             if write_i='1' then
                 case (to_integer(unsigned(address_i))) is
