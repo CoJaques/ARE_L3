@@ -8,14 +8,14 @@
 ------------------------------------------------------------------------------------------
 --
 -- File                 : avl_user_interface.vhd
--- Author               : 
+-- Author               : Theodros Mulugeta & Colin JAques 
 -- Date                 : 04.08.2022
 --
 -- Context              : Avalon user interface
 --
 ------------------------------------------------------------------------------------------
 -- Description : 
---   
+-- Simple interface for LP36
 ------------------------------------------------------------------------------------------
 -- Dependencies : 
 --   
@@ -23,7 +23,7 @@
 -- Modifications :
 -- Ver    Date        Engineer    Comments
 -- 0.0    See header              Initial version
-
+-- 1.0    09.11.24    CJ & TM     Initial implementation
 ------------------------------------------------------------------------------------------
 
 library ieee;
@@ -158,18 +158,16 @@ begin
     -- Write channel with register
     write_register_p : process(avl_reset_i, avl_clk_i)
     begin
-        --| Value by default
-        led_reg_s         <= led_reg_s;
-        lp36_sel_reg_s    <= lp36_sel_reg_s;
-        lp36_data_reg_s   <= lp36_data_reg_s;
-        cs_wr_lp36_sel_s  <= '0';
-        cs_wr_lp36_data_s <= '0';
-
         if avl_reset_i='1' then
             led_reg_s         <= (others => '0');
             lp36_sel_reg_s    <= (others => '0');
             lp36_data_reg_s   <= (others => '0');
+            cs_wr_lp36_sel_s  <= '0';
+            cs_wr_lp36_data_s <= '0';
         elsif rising_edge(avl_clk_i) then
+            cs_wr_lp36_sel_s  <= '0';
+            cs_wr_lp36_data_s <= '0';
+
             if avl_write_i ='1' then
                 case avl_address_i is
                     when LED_ADDR       => led_reg_s <= avl_writedata_i(led_o'range);
