@@ -34,10 +34,9 @@ int main(void){
     
     printf("Laboratoire: Conception d'une interface simple \n");
 
-    //****** Init ******//
-    Switchs_init();
-    Leds_init();
-    Keys_init();
+    printf("The constant ID is: 0x%X \n", AXI_LW_REG(0x0));
+
+    printf("Our constant ID is: 0x%X \n", AVL_REG(ID_OFFSET));
 
     // Variables to track the previous state of keys (pressed or not)
     uint8_t wasKEY0Pressed = 0;
@@ -45,51 +44,65 @@ int main(void){
     uint8_t wasKEY2Pressed = 0;
     uint8_t wasKEY3Pressed = 0;
 
-    printf("The constant ID is: 0x%X \n", AXI_LW_REG(0x0));
-
-    printf("Our constant ID is: 0x%X \n", AVL_REG(ID_OFFSET));
+    // Init
+    Switchs_init();
+    Leds_init();
+    Keys_init();
 
     while(true)
     {
-        uint8_t isKEY0Pressed = Key_read(0);
-        uint8_t isKEY1Pressed = Key_read(1);
-        uint8_t isKEY2Pressed = Key_read(2);
-        uint8_t isKEY3Pressed = Key_read(3);
-
         const uint32_t switchs_read = Switchs_read();
         const uint32_t SW98         = switchs_read >> 8;
-        const uint32_t SW70         = switchs_read & 0x0FF;
+        const uint32_t SW70         = switchs_read & 0x0FF; // TODO - Remove
 
+        const uint8_t isKEY0Pressed = Key_read(0);
+        const uint8_t isKEY1Pressed = Key_read(1);
+        const uint8_t isKEY2Pressed = Key_read(2);
+        const uint8_t isKEY3Pressed = Key_read(3);
+
+        // SW98
+        if (SW98 == 0x0)
+        {
+            Leds_write(SW70);
+        }
+        else if(SW98 == 0x1)
+        {
+            Leds_write(SW70);
+        }
+        else if(SW98 == 0x2)
+        {
+            Leds_write(SW70);
+        }
+        else
+        {
+            Leds_write(SW70);
+        }
+
+        // KEY1-0
         if(isKEY0Pressed && !wasKEY0Pressed)
         {
-            if (SW98 == 0x0)
-            {
-                Leds_write(SW70);
-            }
-            else if(SW98 == 0x1)
-            {
-                Leds_write(SW70);
-            }
-            else if(SW98 == 0x2)
-            {
-                Leds_write(SW70);
-            }
-            else
-            {
-                Leds_write(SW70);
-            }
-        }
 
-        if(isKEY1Pressed && !wasKEY1Pressed)
+        }
+        else if(isKEY1Pressed && !wasKEY1Pressed)
+        {
+
+        }
+        else if((isKEY1Pressed && !wasKEY1Pressed) && (isKEY0Pressed && !wasKEY0Pressed))
+        {
+
+        }
+        else
         {
 
         }
 
+        // KEY2
         if(isKEY2Pressed && !wasKEY2Pressed)
         {
 
         }
 
+        // KEY3
         if(isKEY3Pressed && !wasKEY3Pressed)
         {
 
@@ -102,3 +115,4 @@ int main(void){
         wasKEY3Pressed = isKEY3Pressed;
     }
 }
+
