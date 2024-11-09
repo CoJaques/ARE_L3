@@ -91,18 +91,18 @@ architecture rtl of avl_user_interface is
     );
 
     signal lp36_state_pres_s, lp36_state_fut_s : lp36_state_t;
-    signal lp36_we_sel_s, lp36_we_data_s : std_logic;
-    signal timer_reset_s : std_logic;
+    signal lp36_we_sel_s, lp36_we_data_s       : std_logic;
+    signal timer_reset_s  : std_logic;
     signal counter_done_s : std_logic;
     signal counter_pres_s, counter_fut_s : unsigned(5 downto 0);
-    signal cs_wr_lp36_sel_s : std_logic;
+    signal cs_wr_lp36_sel_s  : std_logic;
     signal cs_wr_lp36_data_s : std_logic;
-    signal lp36_rdy_s : STD_LOGIC;
+    signal lp36_rdy_s        : STD_LOGIC;
 
 begin
     buttons_reg_s  <= boutton_i;
     switches_reg_s <= switch_i;
-    lp36_rdy_s <= not(lp36_we_sel_s or lp36_we_data_s);
+    lp36_rdy_s     <= not(lp36_we_sel_s or lp36_we_data_s);
 
     -- -----------------------------------------
     -- Read
@@ -149,9 +149,8 @@ begin
             readdata_reg_s      <= (others => '0');
         elsif rising_edge(avl_clk_i) then
             readdatavalid_reg_s <= avl_read_i;
-
             if avl_read_i = '1' then
-                readdata_reg_s      <= readdata_next_s;
+                readdata_reg_s  <= readdata_next_s;
             end if;
         end if;
     end process;
@@ -164,11 +163,11 @@ begin
     write_register_p : process(avl_reset_i, avl_clk_i)
     begin
         --| Value by default
-        led_reg_s       <= led_reg_s;
-        lp36_sel_reg_s  <= lp36_sel_reg_s;
-        lp36_data_reg_s <= lp36_data_reg_s;
+        led_reg_s         <= led_reg_s;
+        lp36_sel_reg_s    <= lp36_sel_reg_s;
+        lp36_data_reg_s   <= lp36_data_reg_s;
         cs_wr_lp36_data_s <= '0';
-        cs_wr_lp36_sel_s <= '0';
+        cs_wr_lp36_sel_s  <= '0';
 
         if avl_reset_i='1' then
             led_reg_s       <= (others => '0');
@@ -177,17 +176,15 @@ begin
         elsif rising_edge(avl_clk_i) then
             if avl_write_i ='1' then
                 case avl_address_i is
-                    when LED_ADDR       => led_reg_s       <= avl_writedata_i(led_o'range);
-
+                    when LED_ADDR => led_reg_s <= avl_writedata_i(led_o'range);
                     when LP36_SEL_ADDR  => 
                         if lp36_we_sel_s = '0' then
-                            lp36_sel_reg_s  <= avl_writedata_i(lp36_sel_o'range);
+                            lp36_sel_reg_s   <= avl_writedata_i(lp36_sel_o'range);
                             cs_wr_lp36_sel_s <= '1';
                         end if;
-
                     when LP36_DATA_ADDR => 
                         if lp36_we_sel_s = '0' then
-                            lp36_data_reg_s <= avl_writedata_i;
+                            lp36_data_reg_s   <= avl_writedata_i;
                             cs_wr_lp36_data_s <= '1';
                         end if;
 
@@ -261,14 +258,14 @@ begin
                 lp36_we_sel_s <= '1';
             when WE_RST =>
                 lp36_state_fut_s <= WE_BOTH;
-                lp36_we_sel_s <= '1';
-                lp36_we_data_s <= '1';
-                timer_reset_s <= '1';
+                lp36_we_sel_s    <= '1';
+                lp36_we_data_s   <= '1';
+                timer_reset_s    <= '1';
             when WE_BOTH =>
                 if counter_done_s then
                     lp36_state_fut_s <= IDLE;
                 end if;
-                lp36_we_sel_s <= '1';
+                lp36_we_sel_s  <= '1';
                 lp36_we_data_s <= '1';
         end case;
     end process mss_fut_dec;
