@@ -37,7 +37,6 @@ void Switchs_init(void)
 
 void Leds_init(void)
 {
-	Leds_write(LEDS);
 }
 
 bool Key_read(int key_number)
@@ -72,7 +71,6 @@ void Leds_clear(uint32_t maskleds)
 
 void Leds_toggle(uint32_t maskleds)
 {
-	AVL_REG(LEDS) ^= maskleds & LEDS_BITMASK;
+	AVL_REG(LEDS) ^= (maskleds & LEDS_BITMASK);
 }
-
 
