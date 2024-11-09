@@ -28,10 +28,10 @@
 #include "axi_lw.h"
 
 // Base address
-#define PIO_CORE0_BASE_ADD (AXI_LW_HPS_FPGA_BASE_ADD + 0x100)
+#define AVL_BASE_ADD (AXI_LW_HPS_FPGA_BASE_ADD + 0x1000)
 
 // ACCESS MACROS
-#define PIO0_REG(_x_)   *(volatile uint32_t *)(PIO_CORE0_BASE_ADD + _x_)
+#define AVL_REG(_x_)   *(volatile uint32_t *)(AVL_BASE_ADD + _x_)
 
 // PIO Registers
 #define	DATA 0x00
