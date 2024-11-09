@@ -28,7 +28,7 @@
 #include "axi_lw.h"
 
 // Base address
-#define AVL_BASE_ADD (AXI_LW_HPS_FPGA_BASE_ADD + 0x1000)
+#define AVL_BASE_ADD (AXI_LW_HPS_FPGA_BASE_ADD + 0x10000)
 
 // Access macro
 #define AVL_REG(_x_)   *(volatile uint32_t *)(AVL_BASE_ADD + _x_)
