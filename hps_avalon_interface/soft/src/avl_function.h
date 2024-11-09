@@ -43,14 +43,9 @@
 #define LP36_SEL_OFFSET    0x0084
 #define LP36_DATA_OFFSET   0x0088
 
-// Define PIO bitmask
-#define SW90_BITMASK      0x00003FF0
-#define LED_BITMASK       0x03FF0000
-#define SEG7_BITMASK      0x0FFFFFFF
-
-// Shift
-#define SW90_SHIFT        4
-#define LED_SHIFT         16
+// Define AVL bitmask
+#define SW90_BITMASK      0x000003FF
+#define LED_BITMASK       0x000003FF
 
 // Init
 #define KEY_INIT          0xF

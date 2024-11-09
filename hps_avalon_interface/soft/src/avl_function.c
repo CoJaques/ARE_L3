@@ -48,32 +48,32 @@ bool Key_read(int key_number)
 
 uint32_t Switchs_read(void)
 {
-	return (AVL_REG(SWITCHES_OFFSET) & SW90_BITMASK) >> SW90_SHIFT;
+	return AVL_REG(SWITCHES_OFFSET) & SW90_BITMASK;
 }
 
 uint32_t Leds_read(void)
 {
-	return (AVL_REG(LEDS_OFFSET) & LED_BITMASK) >> LED_SHIFT;
+	return AVL_REG(LEDS_OFFSET) & LED_BITMASK;
 }
 
 void Leds_write(uint32_t value)
 {
-	AVL_REG(LEDS_OFFSET) = (AVL_REG(LEDS_OFFSET) & ~LED_BITMASK) | ((value << 16) & LED_BITMASK);
+	AVL_REG(LEDS_OFFSET) = value;
 }
 
 void Leds_set(uint32_t maskleds)
 {
-	AVL_REG(LEDS_OFFSET) |= (maskleds << LED_SHIFT);
+	AVL_REG(LEDS_OFFSET) |= maskleds;
 }
 
 void Leds_clear(uint32_t maskleds)
 {
-	AVL_REG(LEDS_OFFSET) &= ~(maskleds << LED_SHIFT);
+	AVL_REG(LEDS_OFFSET) &= ~maskleds;
 }
 
 void Leds_toggle(uint32_t maskleds)
 {
-	AVL_REG(LEDS_OFFSET) ^= (maskleds << LED_SHIFT) & LED_BITMASK;
+	AVL_REG(LEDS_OFFSET) ^= maskleds & LED_BITMASK;
 }
 
 

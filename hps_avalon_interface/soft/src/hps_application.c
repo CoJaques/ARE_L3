@@ -57,8 +57,8 @@ int main(void){
         uint8_t isKEY3Pressed = Key_read(3);
 
         const uint32_t switchs_read = Switchs_read();
-        const uint32_t SW70         = switchs_read & 0x0FF;
         const uint32_t SW98         = switchs_read >> 8;
+        const uint32_t SW70         = switchs_read & 0x0FF;
 
         if(isKEY0Pressed && !wasKEY0Pressed)
         {
@@ -68,15 +68,15 @@ int main(void){
             }
             else if(SW98 == 0x1)
             {
-                Leds_set(SW70);
+                Leds_write(SW70);
             }
             else if(SW98 == 0x2)
             {
-                Leds_clear(SW70);
+                Leds_write(SW70);
             }
             else
             {
-                Leds_toggle(0xFF);
+                Leds_write(SW70);
             }
         }
 
