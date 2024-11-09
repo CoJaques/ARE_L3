@@ -46,12 +46,12 @@ bool Key_read(int key_number)
 
 uint32_t Switchs_read(void)
 {
-	return AVL_REG(SWITCHES) & SW90_BITMASK;
+	return AVL_REG(SWITCHES);
 }
 
 uint32_t Leds_read(void)
 {
-	return AVL_REG(LEDS) & LEDS_BITMASK;
+	return AVL_REG(LEDS);
 }
 
 void Leds_write(uint32_t value)
@@ -71,6 +71,6 @@ void Leds_clear(uint32_t maskleds)
 
 void Leds_toggle(uint32_t maskleds)
 {
-	AVL_REG(LEDS) ^= (maskleds & LEDS_BITMASK);
+	AVL_REG(LEDS) ^= maskleds;
 }
 

@@ -43,10 +43,6 @@
 #define LP36_SEL    0x0084
 #define LP36_DATA   0x0088
 
-// Define AVL bitmask
-#define SW90_BITMASK 0x000003FF
-#define LEDS_BITMASK 0x000003FF
-
 //***************************//
 //****** Init function ******//
 
