@@ -34,14 +34,14 @@
 #define AVL_REG(_x_)   *(volatile uint32_t *)(AVL_BASE_ADD + _x_)
 
 // Offset
-#define ID                0x0000
-#define BUTTONS           0x0004
-#define SWITCHES          0x000C
-#define LP36_STATUS       0x0010
-#define LP36_READY        0x0014
-#define LEDS              0x0080
-#define LP36_SEL          0x0084
-#define LP36_DATA         0x0088
+#define ID_OFFSET          0x0000
+#define BUTTONS_OFFSET     0x0004
+#define SWITCHES_OFFSET    0x000C
+#define LP36_STATUS_OFFSET 0x0010
+#define LP36_READY_OFFSET  0x0014
+#define LEDS_OFFSET        0x0080
+#define LP36_SEL_OFFSET    0x0084
+#define LP36_DATA_OFFSET   0x0088
 
 // Define PIO bitmask
 #define SW90_BITMASK      0x00003FF0
@@ -60,14 +60,14 @@
 //***************************//
 //****** Init function ******//
 
+// Keys_init function : Initialize all Keys in PIO core (KEY3 to KEY0)
+void Keys_init(void);
+
 // Swicths_init function : Initialize all Switchs in PIO core (SW9 to SW0)
 void Switchs_init(void);
 
 // Leds_init function : Initialize all Leds in PIO core (LED9 to LED0)
 void Leds_init(void);
-
-// Keys_init function : Initialize all Keys in PIO core (KEY3 to KEY0)
-void Keys_init(void);
 
 //***********************************//
 //****** Global usage function ******//

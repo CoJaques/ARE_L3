@@ -27,6 +27,11 @@
 #include <stdbool.h>
 #include "avl_function.h"
 
+void Keys_init(void)
+{
+}
+
+
 void Switchs_init(void)
 {
 }
@@ -36,38 +41,39 @@ void Leds_init(void)
 	Leds_write(LED_INIT);
 }
 
-void Keys_init(void)
-{
-}
-
 bool Key_read(int key_number)
 {
-	return (AVL_REG(BUTTONS) & (1 << key_number)) == 0;
+	return (AVL_REG(BUTTONS_OFFSET) & (1 << key_number)) == 0;
+}
+
+uint32_t Switchs_read(void)
+{
+	return (AVL_REG(SWITCHES_OFFSET) & SW90_BITMASK) >> SW90_SHIFT;
 }
 
 uint32_t Leds_read(void)
 {
-	return (AVL_REG(LEDS) & LED_BITMASK) >> LED_SHIFT;
+	return (AVL_REG(LEDS_OFFSET) & LED_BITMASK) >> LED_SHIFT;
 }
 
 void Leds_write(uint32_t value)
 {
-	AVL_REG(LEDS) = (AVL_REG(LEDS) & ~LED_BITMASK) | ((value << 16) & LED_BITMASK);
+	AVL_REG(LEDS_OFFSET) = (AVL_REG(LEDS_OFFSET) & ~LED_BITMASK) | ((value << 16) & LED_BITMASK);
 }
 
 void Leds_set(uint32_t maskleds)
 {
-	AVL_REG(LEDS) |= (maskleds << LED_SHIFT);
+	AVL_REG(LEDS_OFFSET) |= (maskleds << LED_SHIFT);
 }
 
 void Leds_clear(uint32_t maskleds)
 {
-	AVL_REG(LEDS) &= ~(maskleds << LED_SHIFT);
+	AVL_REG(LEDS_OFFSET) &= ~(maskleds << LED_SHIFT);
 }
 
 void Leds_toggle(uint32_t maskleds)
 {
-	AVL_REG(LEDS) ^= (maskleds << LED_SHIFT) & LED_BITMASK;
+	AVL_REG(LEDS_OFFSET) ^= (maskleds << LED_SHIFT) & LED_BITMASK;
 }
 
 

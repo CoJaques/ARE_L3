@@ -47,7 +47,7 @@ int main(void){
 
     printf("The constant ID is: 0x%X \n", AXI_LW_REG(0x0));
 
-    printf("Our constant ID is: 0x%X \n", AVL_REG(0x0));
+    printf("Our constant ID is: 0x%X \n", AVL_REG(ID_OFFSET));
 
     while(true)
     {
