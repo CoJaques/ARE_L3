@@ -79,7 +79,7 @@ architecture rtl of avl_user_interface is
     signal readdatavalid_next_s : std_logic;
     signal readdatavalid_reg_s  : std_logic;
     signal readdata_next_s      : std_logic_vector(avl_readdata_o'range);
-    signal readdata_reg_s       : std_logic_vector(avl_readdata_o'range);
+   signal readdata_reg_s       : std_logic_vector(avl_readdata_o'range);
 
 begin
     buttons_reg_s  <= boutton_i;
@@ -103,25 +103,21 @@ begin
         end if;
     end process;
 
-    -- Read decoder process
+    -- Read multiplexer process
     read_decoder_p : process(all)
     begin
         --| Value by default
-        readdatavalid_next_s <= '0';       
         readdata_next_s      <= (others => '0');
 
-        if avl_read_i  = '1' then
-            readdatavalid_next_s <= '1';
-            case avl_address_i is
-                when ID_ADDR        => readdata_next_s <= ID;
-                when BUTTONS_ADDR   => readdata_next_s(boutton_i'range)   <= buttons_reg_s;
-                when SWITCHES_ADDR  => readdata_next_s(switch_i'range)    <= switches_reg_s;
-                when LED_ADDR       => readdata_next_s(led_o'range)       <= led_reg_s;
-                when LP36_SEL_ADDR  => readdata_next_s(lp36_sel_o'range)  <= lp36_sel_reg_s;
-                when LP36_DATA_ADDR => readdata_next_s(lp36_data_o'range) <= lp36_data_reg_s;
-                when others         => null;
-            end case;
-        end if;
+        case avl_address_i is
+            when ID_ADDR        => readdata_next_s <= ID;
+            when BUTTONS_ADDR   => readdata_next_s(boutton_i'range)   <= buttons_reg_s;
+            when SWITCHES_ADDR  => readdata_next_s(switch_i'range)    <= switches_reg_s;
+            when LED_ADDR       => readdata_next_s(led_o'range)       <= led_reg_s;
+            when LP36_SEL_ADDR  => readdata_next_s(lp36_sel_o'range)  <= lp36_sel_reg_s;
+            when LP36_DATA_ADDR => readdata_next_s(lp36_data_o'range) <= lp36_data_reg_s;
+            when others         => null;
+        end case;
     end process;
 
     -- Read register process
@@ -131,8 +127,11 @@ begin
             readdatavalid_reg_s <= '0';
             readdata_reg_s      <= (others => '0');
         elsif rising_edge(avl_clk_i) then
-            readdatavalid_reg_s <= readdatavalid_next_s;
-            readdata_reg_s      <= readdata_next_s;
+            readdatavalid_reg_s <= avl_read_i;
+
+            if avl_read_i = '1' then
+                readdata_reg_s      <= readdata_next_s;
+            end if;
         end if;
     end process;
 
