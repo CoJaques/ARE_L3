@@ -31,49 +31,48 @@ void Keys_init(void)
 {
 }
 
-
 void Switchs_init(void)
 {
 }
 
 void Leds_init(void)
 {
-	Leds_write(LED_INIT);
+	Leds_write(LEDS);
 }
 
 bool Key_read(int key_number)
 {
-	return (AVL_REG(BUTTONS_OFFSET) & (1 << key_number)) == 0;
+	return (AVL_REG(BUTTONS) & (1 << key_number)) == 0;
 }
 
 uint32_t Switchs_read(void)
 {
-	return AVL_REG(SWITCHES_OFFSET) & SW90_BITMASK;
+	return AVL_REG(SWITCHES) & SW90_BITMASK;
 }
 
 uint32_t Leds_read(void)
 {
-	return AVL_REG(LEDS_OFFSET) & LED_BITMASK;
+	return AVL_REG(LEDS) & LEDS_BITMASK;
 }
 
 void Leds_write(uint32_t value)
 {
-	AVL_REG(LEDS_OFFSET) = value;
+	AVL_REG(LEDS) = value;
 }
 
 void Leds_set(uint32_t maskleds)
 {
-	AVL_REG(LEDS_OFFSET) |= maskleds;
+	AVL_REG(LEDS) |= maskleds;
 }
 
 void Leds_clear(uint32_t maskleds)
 {
-	AVL_REG(LEDS_OFFSET) &= ~maskleds;
+	AVL_REG(LEDS) &= ~maskleds;
 }
 
 void Leds_toggle(uint32_t maskleds)
 {
-	AVL_REG(LEDS_OFFSET) ^= maskleds & LED_BITMASK;
+	AVL_REG(LEDS) ^= maskleds & LEDS_BITMASK;
 }
 
 

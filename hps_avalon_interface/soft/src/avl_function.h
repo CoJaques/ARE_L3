@@ -34,23 +34,18 @@
 #define AVL_REG(_x_)   *(volatile uint32_t *)(AVL_BASE_ADD + _x_)
 
 // Offset
-#define ID_OFFSET          0x0000
-#define BUTTONS_OFFSET     0x0004
-#define SWITCHES_OFFSET    0x000C
-#define LP36_STATUS_OFFSET 0x0010
-#define LP36_READY_OFFSET  0x0014
-#define LEDS_OFFSET        0x0080
-#define LP36_SEL_OFFSET    0x0084
-#define LP36_DATA_OFFSET   0x0088
+#define ID          0x0000
+#define BUTTONS     0x0004
+#define SWITCHES    0x000C
+#define LP36_STATUS 0x0010
+#define LP36_READY  0x0014
+#define LEDS        0x0080
+#define LP36_SEL    0x0084
+#define LP36_DATA   0x0088
 
 // Define AVL bitmask
-#define SW90_BITMASK      0x000003FF
-#define LED_BITMASK       0x000003FF
-
-// Init
-#define KEY_INIT          0xF
-#define LED_INIT          0x155
-
+#define SW90_BITMASK 0x000003FF
+#define LEDS_BITMASK 0x000003FF
 
 //***************************//
 //****** Init function ******//
