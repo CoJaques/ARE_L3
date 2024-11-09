@@ -100,10 +100,6 @@ architecture rtl of avl_user_interface is
     signal lp36_rdy_s        : STD_LOGIC;
 
 begin
-    buttons_reg_s  <= boutton_i;
-    switches_reg_s <= switch_i;
-    lp36_rdy_s     <= not(lp36_we_sel_s or lp36_we_data_s);
-
     -- -----------------------------------------
     -- Read
     -- -----------------------------------------
@@ -166,13 +162,13 @@ begin
         led_reg_s         <= led_reg_s;
         lp36_sel_reg_s    <= lp36_sel_reg_s;
         lp36_data_reg_s   <= lp36_data_reg_s;
-        cs_wr_lp36_sel_s  <= '0';
-        cs_wr_lp36_data_s <= '0';
 
         if avl_reset_i='1' then
-            led_reg_s       <= (others => '0');
-            lp36_sel_reg_s  <= (others => '0');
-            lp36_data_reg_s <= (others => '0');
+            led_reg_s         <= (others => '0');
+            lp36_sel_reg_s    <= (others => '0');
+            lp36_data_reg_s   <= (others => '0');
+            cs_wr_lp36_sel_s  <= '0';
+            cs_wr_lp36_data_s <= '0';
         elsif rising_edge(avl_clk_i) then
             if avl_write_i ='1' then
                 case avl_address_i is
@@ -187,7 +183,6 @@ begin
                             lp36_data_reg_s   <= avl_writedata_i;
                             cs_wr_lp36_data_s <= '1';
                         end if;
-
                     when others         => null;
                 end case;
             end if;
@@ -269,6 +264,11 @@ begin
                 lp36_we_data_s <= '1';
         end case;
     end process mss_fut_dec;
+
+    -- -----------------------------------------
+    -- Internal signals
+    -- -----------------------------------------
+    lp36_rdy_s     <= not(lp36_we_sel_s or lp36_we_data_s);
 
     -- -----------------------------------------
     -- Output signals
