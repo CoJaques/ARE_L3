@@ -226,16 +226,16 @@ begin
 
     mss_fut_dec : process (lp36_state_pres_s, lp36_we_data_s, lp36_we_sel_s, counter_done_s) is
     begin
-        lp36_we_sel_s <= '0';
+        lp36_we_sel_s  <= '0';
         lp36_we_data_s <= '0';
-        timer_reset_s <= '0';
+        timer_reset_s  <= '0';
 
         case lp36_state_pres_s is
             when IDLE =>
-                if cs_wr_lp36_data_s = '1' then
+                if cs_wr_lp36_data_s   = '1' then
                     lp36_state_fut_s <= WE_DATA;
                 elsif cs_wr_lp36_sel_s = '1' then
-               lp36_state_fut_s <= WE_SEL;
+                    lp36_state_fut_s <= WE_SEL;
                 end if;
 
                 timer_reset_s <= '1';
@@ -264,6 +264,7 @@ begin
                 if counter_done_s then
                     lp36_state_fut_s <= IDLE;
                 end if;
+
                 lp36_we_sel_s  <= '1';
                 lp36_we_data_s <= '1';
         end case;
