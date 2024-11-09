@@ -30,12 +30,18 @@
 // Base address
 #define AVL_BASE_ADD (AXI_LW_HPS_FPGA_BASE_ADD + 0x1000)
 
-// ACCESS MACROS
+// Access macro
 #define AVL_REG(_x_)   *(volatile uint32_t *)(AVL_BASE_ADD + _x_)
 
-// PIO Registers
-#define	DATA 0x00
-#define DIRECTION 0x04
+// Offset
+#define ID                0x0000
+#define BUTTONS           0x0004
+#define SWITCHES          0x000C
+#define LP36_STATUS       0x0010
+#define LP36_READY        0x0014
+#define LEDS              0x0080
+#define LP36_SEL          0x0084
+#define LP36_DATA         0x0088
 
 // Define PIO bitmask
 #define SW90_BITMASK      0x00003FF0
@@ -50,8 +56,6 @@
 #define KEY_INIT          0xF
 #define LED_INIT          0x155
 
-// Util
-#define ARRAY_SIZE        16
 
 //***************************//
 //****** Init function ******//
