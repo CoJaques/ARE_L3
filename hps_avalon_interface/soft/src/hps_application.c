@@ -38,7 +38,7 @@ int main(void){
 
     printf("Our constant ID is: 0x%X \n", AVL_REG(ID_OFFSET));
 
-    // Variables to track the previous state of keys (pressed or not)
+    // Variables to track the previous state of keys
     uint8_t wasKEY0Pressed = 0;
     uint8_t wasKEY1Pressed = 0;
     uint8_t wasKEY2Pressed = 0;
