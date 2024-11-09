@@ -72,6 +72,11 @@ void Keys_init(void);
 //***********************************//
 //****** Global usage function ******//
 
+// Key_read function : Read one Key status, pressed or not (KEY0 or KEY1 or KEY2 or KEY3)
+// Parameter : "key_number"= select the key number to read, from 0 to 3
+// Return : True(1) if key is pressed, and False(0) if key is not pressed
+bool Key_read(int key_number);
+
 // Switchs_read function : Read the switchs value
 // Parameter : None
 // Return : Value of all Switchs (SW9 to SW0)
@@ -101,8 +106,3 @@ void Leds_clear(uint32_t maskleds);
 // Parameter : "maskleds"= Leds selected to apply a toggle (maximum 0x3FF)
 // Return : None
 void Leds_toggle(uint32_t maskleds);
-
-// Key_read function : Read one Key status, pressed or not (KEY0 or KEY1 or KEY2 or KEY3)
-// Parameter : "key_number"= select the key number to read, from 0 to 3
-// Return : True(1) if key is pressed, and False(0) if key is not pressed
-bool Key_read(int key_number);
