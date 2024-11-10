@@ -62,7 +62,7 @@ int main(void)
 	bool keys_state_old[4] = { false, false, false, false };
 
 	while (true) {
-		uint32_t switchs_value = switchs_read();
+		volatile uint32_t switchs_value = switchs_read();
 		read_keys(keys_state);
 
 		// Update DE1-SoC LEDs based on switch values
@@ -80,13 +80,13 @@ int main(void)
 			leds_value = switchs_value & 0xFF;
 			break;
 		case 1: // Display 1010...1010
-			leds_value = 0xAA;
+			leds_value = 0xAAAAAAAA;
 			break;
 		case 2: // Display 0101...0101
-			leds_value = 0x55;
+			leds_value = 0x55555555;
 			break;
 		case 3: // Display 1111...1111
-			leds_value = 0xFF;
+			leds_value = 0xFFFFFFFF;
 			break;
 		}
 
