@@ -35,23 +35,33 @@ HEIG-VD
 Ce rapport présente le travail réalisé dans le cadre du troisième laboratoire du cours "Architecture des systèmes embarqués (ARE)", intitulé "Conception d’une interface simple". L'objectif principal de ce laboratoire est de concevoir et implémenter une interface matérielle connectée au bus Avalon pour contrôler divers périphériques de la carte DE1-SoC, ainsi qu'une liaison parallèle vers une carte Max10_leds. Le rapport détaille les différentes étapes de la conception, de la simulation et des tests, tout en mettant en évidence les choix techniques effectués pour répondre aux spécifications demandées.
 
 <br>
-
----
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
 
 # Plan d'adressage
 
 Afin de concevoir notre interface, nous avons dû élaborer un plan d'adressage permettant de définir les méthodes d'accès entre le CPU et le FPGA.
 
-La taille de la zone disponible pour l'interface correspond à 14 bits d'adresse, car la plage définie s'étend de 0x01_0000 à 0x01_FFFF, ce qui représente un espace total de 64 Ko.
+La taille de la zone disponible pour l'interface correspond à 14 bits d'adresse, car la plage définie s'étend de 0x01_0000 à 0x01_FFFF, ce qui représente un espace total de 64 Ko. 
 
 Cependant, seuls 14 bits sont nécessaires pour adresser un registre du côté FPGA. En effet, l'adressage se fait par blocs de 4 octets (32 bits) et non par octets individuels. Par conséquent, les deux bits de poids faible des adresses ne sont pas utilisés dans l'adressage côté FPGA. Cela réduit le nombre effectif de bits nécessaires, rendant 14 bits suffisants pour couvrir l'ensemble de la plage de 64 Ko.
 
-Lors de la conception de notre plan d'adressage, nous avons cherché à rendre celui-ci adaptable et modulable. La plage d'adresses disponible étant largement suffisante pour nos besoins, nous l'avons divisée en plusieurs sections.
+Lors de la conception de notre plan d'adressage, nous avons cherché à rendre celui-ci adaptable et modulable. La plage d'adresses disponible étant largement suffisante pour nos besoins, nous l'avons divisée en plusieurs sections. 
 
-Première partie (0x4000 à 0x401F) : dédiée à des registres en lecture seule. Seules certaines adresses de cette plage sont utilisées, tandis que les autres sont réservées pour de potentielles extensions futures.
-Deuxième partie (0x4020 à 0x403F) : dédiée à des registres en lecture/écriture.
-Dernière partie (0x4040 à 0x7FFF) : laissée libre et non réservée, car elle n'est pas utilisée dans notre conception actuelle.
-Pour les registres où seuls certains bits parmi les 32 bits sont utilisés, nous avons décidé de mettre les bits inutilisés à 0. Cette approche permet d'éviter les problèmes de lecture ou d'écriture dans des zones non définies et simplifie la gestion des données, en supprimant la nécessité d'appliquer des masques lors des opérations de lecture.
+- **Première partie (0x4000 à 0x401F)** : dédiée à des registres en lecture seule. Seules certaines adresses de cette plage sont utilisées, tandis que les autres sont réservées pour de potentielles extensions futures.  
+- **Deuxième partie (0x4020 à 0x403F)** : dédiée à des registres en lecture/écriture.  
+- **Dernière partie (0x4040 à 0x7FFF)** : laissée libre et non réservée, car elle n'est pas utilisée dans notre conception actuelle.
+
+Pour les registres où seuls certains bits parmi les 32 bits sont utilisés, nous avons décidé de mettre les bits inutilisés à 0. Cette approche permet d'éviter les problèmes de lecture ou d'écriture dans des zones non définies et simplifie la gestion des données, en supprimant la nécessité d'appliquer des masques lors des opérations de lecture. 
 
 ## Plan d'adressage final
 
@@ -69,6 +79,17 @@ Pour les registres où seuls certains bits parmi les 32 bits sont utilisés, nou
 | `0xFF21 008C -> 0x00FF21 00FC` | `0x4023 -> 0x403F` |                       | Reserved                         | Reserved                  |
 | `0xFF21 0100 -> 0x00FF21 FFFF` | `0x4040 -> 0x7FF`  |                       | Free                             | Free                      |
 
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
 <br>
 
 # Conception
@@ -90,7 +111,7 @@ Ce schéma représente l'architecture générale de notre interface matérielle.
 
 Certaines données sont transmises entre les différents blocs pour assurer leur coordination :  
 - **Transfert des valeurs des registres d'écriture** : Le bloc d'écriture transmet les valeurs des registres au bloc de lecture, permettant ainsi au CPU de relire l’état des sorties.  
-- **Retour du bit `lp36_read`** : Ce bit est envoyé au bloc de lecture pour être accessible par le CPU. Il est également transmis au bloc d’écriture afin de contrôler l’activation des registres et d’éviter toute corruption des données pendant une opération d’écriture vers la carte MAX10.
+- **Retour du bit `lp36_ready`** : Ce bit est envoyé au bloc de lecture pour être accessible par le CPU. Il est également transmis au bloc d’écriture afin de contrôler l’activation des registres et d’éviter toute corruption des données pendant une opération d’écriture vers la carte MAX10.
 
 ## Avalon
 
@@ -113,6 +134,26 @@ Pour l'écriture, nous avons utilisé un décodeur qui, en fonction de l'état d
 - **Registres du LP36** : Le registre de l'état du LP36 et celui des données du LP36 ne peuvent être modifiés que s'ils ne sont pas en cours de lecture par la carte MAX10. Cette restriction permet d'éviter les conflits ou la corruption des données lors d'une opération de lecture parallèle.
 
 Les registres utilisés ont des tailles adaptées pour ne stocker que les données nécessaires, ce qui permet une utilisation optimisée des ressources. 
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
 
 ## LP36 spécifique
 
@@ -152,6 +193,51 @@ Le comportement de ce système est décrit à l'aide d'une machine d'état simpl
 - En revanche, si une nouvelle demande d'écriture concerne le même registre que lors de l'écriture en cours, aucune action n'est prise : les données ne sont pas prises en compte pour éviter tout conflit ou corruption.
 
 Cette gestion garantit que les contraintes matérielles spécifiques au LP36 sont respectées, tout en assurant une utilisation correcte des registres sans perte de données ni conflits. 
+
+Voici une section complète pour expliquer comment la valeur de 50 cycles a été déterminée, à intégrer directement dans ton rapport :
+
+### Calcul du délai minimum pour le cycle LP36
+
+La carte MAX10 impose une contrainte matérielle : chaque cycle d'écriture sur le bus parallèle de la carte LP36 doit durer **au moins 1 μs**. Cela signifie que le signal `write_enable` doit rester actif pendant cette durée minimale. Afin de respecter cette spécification, nous avons dû convertir cette contrainte temporelle en cycles d'horloge en tenant compte de la fréquence du bus Avalon.
+
+#### Fréquence du bus Avalon
+Le bus Avalon fonctionne avec une horloge de **50 MHz**, soit une période d'horloge de :
+
+\[
+T_{\text{Avalon}} = \frac{1}{\text{Fréquence}} = \frac{1}{50 \times 10^6} = 20 \, \text{ns par cycle.}
+\]
+
+#### Durée minimale imposée par la carte LP36
+La durée minimale pour le cycle d'écriture est de :
+
+\[
+T_{\text{LP36}} = 1 \, \mu s = 1 \times 10^{-6} \, \text{s.}
+\]
+
+#### Nombre de cycles d'horloge nécessaires
+Le nombre de cycles nécessaires pour respecter cette durée est calculé en divisant la durée minimale par la période d'horloge :
+
+\[
+\text{Nombre de cycles} = \frac{T_{\text{LP36}}}{T_{\text{Avalon}}} = \frac{1 \times 10^{-6}}{20 \times 10^{-9}} = 50 \, \text{cycles.}
+\]
+
+#### Implémentation dans le design
+Pour garantir que le signal `write_enable` respecte cette durée, nous avons utilisé un **compteur 6 bits** (capable de compter jusqu'à 63) dans notre design. Ce compteur incrémente à chaque cycle d'horloge du bus Avalon, et le signal `write_enable` reste actif tant que le compteur n'a pas atteint la valeur 50. Une fois ce seuil atteint, le compteur est remis à zéro, et l'écriture est terminée.
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
 
 # Implémentation
 
