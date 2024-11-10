@@ -50,27 +50,133 @@ Pour les registres où seuls certains bits parmi les 32 bits sont utilisés, nou
 <br>
 
 # Conception
+Ce chapitre a pour objectif de présenter notre conception de l'interface matérielle, en mettant en évidence les différents blocs fonctionnels et les interactions entre eux. Nous détaillerons également les spécifications de chaque bloc, ainsi que les choix techniques effectués pour répondre aux exigences du laboratoire.
 
 ## Schéma de principe
 ![Principe](image.png)
-<br>
+
+Ce schéma représente l'architecture générale de notre interface matérielle. Nous avons identifié trois blocs principaux, chacun ayant un rôle spécifique dans le fonctionnement de l'interface :
+
+1. **Gestion de l'écriture** : Ce bloc a pour rôle de gérer les demandes d'écriture provenant du CPU. Il permet d'écrire dans trois registres distincts :  
+   - Un registre pour les LEDs,  
+   - Un registre pour le mode de sélection du LP36,  
+   - Un registre pour les données du LP36.  
+
+2. **Gestion de la lecture** : Ce bloc s'occupe des demandes de lecture effectuées par le CPU. Il décode les adresses provenant du CPU afin de rediriger les informations appropriées sur le bus de données de lecture. Ce bloc gère également le bit indiquant au bus Avalon que les données en lecture sont prêtes et valides.
+
+3. **Gestion du LP36 (LP36 management)** : Ce bloc prend en charge le cycle d'écriture des données vers le LP36. La carte MAX10 impose une contrainte spécifique : le cycle d'écriture doit durer au moins 1 μs. Ainsi, lorsqu’une transmission de données via l'interface parallèle de la carte MAX10 est nécessaire, le signal `write_enable` de la carte MAX10 doit être activé pendant au moins 1 μs. Pendant cette période, il est essentiel que les données restent stables pour éviter toute corruption.
+
+Certaines données sont transmises entre les différents blocs pour assurer leur coordination :  
+- **Transfert des valeurs des registres d'écriture** : Le bloc d'écriture transmet les valeurs des registres au bloc de lecture, permettant ainsi au CPU de relire l’état des sorties.  
+- **Retour du bit `lp36_read`** : Ce bit est envoyé au bloc de lecture pour être accessible par le CPU. Il est également transmis au bloc d’écriture afin de contrôler l’activation des registres et d’éviter toute corruption des données pendant une opération d’écriture vers la carte MAX10.
 
 ## Avalon
 
+Le bus Avalon est utilisé pour la communication entre le CPU et le FPGA. Sa description complète est spécifiée dans les consignes de ce laboratoire. Ce bus permet de gérer des adresses de lecture et d'écriture, des données associées, ainsi que des signaux de contrôle et de validation. Un signal spécifique doit être manipulé du côté FPGA pour indiquer si les données en lecture sont valides.
+
 ### Lecture
+
 ![read](image-1.png)
-<br>
+
+Pour la lecture, nous avons opté pour l'utilisation d'un multiplexeur. Celui-ci, piloté par les adresses de lecture, sélectionne les données à renvoyer sur le bus de données. Les entrées asynchrones provenant du LP36 ou des E/S de la carte MAX10 sont synchronisées à l'aide d'un flip-flop afin d'éviter des problèmes de synchronisation.
+
+Un registre 32 bits est utilisé pour stocker temporairement les données à transmettre sur le bus. Ce registre est mis à jour en fonction des adresses de lecture reçues. Une fois les données insérées dans le registre, le bit de validation de lecture est activé pour informer le CPU que les données sont prêtes à être lues. 
 
 ### Écriture
 ![read](image-2.png)
-<br>
+
+Pour l'écriture, nous avons utilisé un décodeur qui, en fonction de l'état du bus d'adresses, redirige les données d'écriture vers le registre approprié. Ce décodeur est piloté par les adresses d'écriture. Les données à écrire sont stockées dans des registres dédiés, qui servent ensuite à mettre à jour les sorties correspondantes.
+
+- **Registre des LEDs** : Son écriture est inconditionnelle, c'est-à-dire qu'aucune restriction n'empêche sa mise à jour.  
+- **Registres du LP36** : Le registre de l'état du LP36 et celui des données du LP36 ne peuvent être modifiés que s'ils ne sont pas en cours de lecture par la carte MAX10. Cette restriction permet d'éviter les conflits ou la corruption des données lors d'une opération de lecture parallèle.
+
+Les registres utilisés ont des tailles adaptées pour ne stocker que les données nécessaires, ce qui permet une utilisation optimisée des ressources. 
 
 ## LP36 spécifique
-![chrono](image-4.png)
-![LP36](image-3.png)
-<br>
 
-# Implémetation
+Afin de permettre les opérations de lecture et d'écriture sur le bus parallèle de communication de la carte MAX10, un bloc spécifique a été conçu. En effet, le cycle d'écriture doit durer au moins 1 μs. Lorsqu'une transmission de données via l'interface parallèle de la carte MAX10 est nécessaire, le signal `write_enable` doit être maintenu actif pendant au moins 1 μs. Pendant cette période, il est impératif que les données restent stables pour éviter toute corruption.
+
+Pour répondre à cette spécification, nous avons mis en place un système de protection des registres, empêchant leur modification durant une écriture en cours. Nous avons également créé un signal, `lp36_ready_o`, qui informe le CPU de la disponibilité du LP36 pour une nouvelle écriture.
+
+Cependant, cette méthode présentait une problématique : il semblait impossible d'écrire simultanément le mode et les données sans devoir attendre la fin du cycle d'écriture. Pour résoudre ce problème, nous avons décidé de séparer les blocages pour l'écriture du mode et des données. Ainsi, il est possible d'écrire d'abord le mode, puis les données dans le même cycle d'écriture. Lorsque l'écriture est effectuée sur l'une des deux parties (mode ou données), le compteur de durée d'écriture est remis à zéro. Cela garantit que la durée minimale d'écriture de 1 μs est toujours respectée.
+
+Le chronogramme ci-dessous illustre le fonctionnement de l'écriture sur le LP36.
+
+### Description des signaux
+
+- **CPU** : Action effectuée par le CPU.  
+- **DATA** : Données contenues dans le registre `data`, transmises au LP36.  
+- **SEL** : Données contenues dans le registre `sel`, transmises au LP36.  
+- **rdy** : Bit indiquant si une écriture est possible sur le LP36 (égal à `not we_o`).  
+- **we_sel** : Bit indiquant s'il est possible d'écrire dans le registre `sel`.  
+- **we_data** : Bit indiquant s'il est possible d'écrire dans le registre `data`.  
+- **we_o** : Signal `write_enable` envoyé au LP36 (égal à `we_sel` ou `we_data`).  
+- **counter** : Compteur indiquant le temps écoulé depuis le début du cycle d'écriture.  
+
+---
+![chrono](image-4.png)
+
+---
+
+![LP36](image-3.png)
+
+---
+
+Le comportement de ce système est décrit à l'aide d'une machine d'état simple. Cette machine d'état gère les différentes transitions nécessaires pour respecter les contraintes d'écriture. 
+
+- Lorsqu'une écriture est initiée par le CPU et qu'elle concerne un registre de communication avec le LP36, une transition est effectuée : le signal `write_enable` est activé et le compteur est démarré.  
+- Une fois que le compteur atteint la durée requise (1 μs), le signal `write_enable` est désactivé et le compteur est remis à zéro.  
+- Si, pendant un cycle d'écriture, une nouvelle demande d'écriture est effectuée sur un registre différent du précédent, le signal `write_enable` reste activé et le compteur est réinitialisé à zéro pour garantir la durée minimale requise.  
+- En revanche, si une nouvelle demande d'écriture concerne le même registre que lors de l'écriture en cours, aucune action n'est prise : les données ne sont pas prises en compte pour éviter tout conflit ou corruption.
+
+Cette gestion garantit que les contraintes matérielles spécifiques au LP36 sont respectées, tout en assurant une utilisation correcte des registres sans perte de données ni conflits. 
+
+# Implémentation
+
+L'implémentation de ce design a été réalisée dans un fichier VHDL nommé `avl_user_interface.vhd`. Ce fichier regroupe les différents blocs fonctionnels nécessaires au fonctionnement de l'interface Avalon pour la gestion des communications entre le CPU et le FPGA. L'architecture met en œuvre trois principales fonctionnalités : la gestion de la lecture, la gestion de l'écriture et la gestion spécifique du LP36.
+
+## Description globale
+
+Le fichier est organisé autour de plusieurs processus, chacun étant dédié à un rôle précis. Ces processus interagissent pour gérer les lectures et écritures via le bus Avalon, tout en respectant les spécifications du laboratoire. Voici les différents processus et leur rôle :
+
+### 1. **Lecture**
+   - **Processus de synchronisation des entrées** : Les signaux entrants asynchrones, tels que les boutons, les interrupteurs ou l'état du LP36, sont synchronisés à l'horloge `avl_clk_i` pour éviter les problèmes liés aux changements de signal hors synchronisation.
+   - **Multiplexeur de lecture** : Ce processus sélectionne les données à renvoyer sur le bus Avalon en fonction de l'adresse en cours (`avl_address_i`). Les données sélectionnées sont ensuite stockées dans un registre dédié.
+   - **Registre de lecture** : Un registre temporaire est utilisé pour mémoriser les données à lire. Ce registre s'assure que les données restent stables tant qu'elles ne sont pas lues par le CPU. Un signal de validation (`avl_readdatavalid_o`) informe le CPU que les données sont prêtes.
+
+### 2. **Écriture**
+   - **Décodage des adresses** : Un décodeur analyse les adresses d'écriture (`avl_address_i`) pour rediriger les données vers le registre approprié.  
+   - **Registres d'écriture** : Chaque type de donnée (LEDs, mode LP36, données LP36) possède un registre dédié. Ces registres permettent de stocker les données reçues jusqu'à leur transmission ou utilisation.  
+   - **Protection contre les conflits** : Pour les registres liés au LP36, des contrôles supplémentaires empêchent leur modification lorsque des opérations critiques, telles qu'une transmission en cours, sont en cours.
+
+### 3. **Gestion du LP36**
+   - **Compteur de cycle d'écriture** : Ce processus surveille la durée des cycles d'écriture pour garantir que le signal `write_enable` reste actif pendant au moins 1 μs, comme spécifié par la carte MAX10. Un compteur incrémente à chaque cycle d'horloge, et un signal de fin (`counter_done_s`) indique lorsque la durée requise est atteinte.
+   - **Machine à états** : Une machine à états contrôle le signal `write_enable` en fonction des commandes reçues et de l'état actuel des registres. Les transitions entre états (telles que `WE_DATA`, `WE_SEL` ou `WE_BOTH`) permettent de gérer l'écriture des données et du mode de manière séquentielle sans conflit.
+
+## Synthèse des processus
+
+| **Processus**            | **Rôle**                                                                                     |
+|---------------------------|---------------------------------------------------------------------------------------------|
+| **sync_input_reg**        | Synchronisation des signaux entrants asynchrones (boutons, interrupteurs, statut LP36).     |
+| **read_decoder**        | Sélection des données à lire via un multiplexeur basé sur l'adresse.                        |
+| **read_register**       | Stockage et validation des données lues pour le CPU.                                        |
+| **write_register**      | Décodage des adresses d'écriture et gestion des registres dédiés.                           |
+| **counter**               | Gestion du compteur pour garantir une durée minimale d'écriture sur le LP36.               |
+| **mss_state_reg**         | Machine à états pour gérer les signaux `write_enable` et éviter les conflits.               |
+| **mss_fut_dec**           | Détermine les transitions d'états en fonction des commandes et des états actuels.           |
+
+## Points forts de l'implémentation
+
+- **Modularité** : Chaque fonctionnalité est isolée dans un processus distinct, ce qui facilite la maintenance et l'évolution du design.  
+- **Protection contre les conflits** : Les mécanismes intégrés garantissent la cohérence des écritures, même en cas de demandes simultanées ou conflictuelles.  
+- **Respect des spécifications matérielles** : La gestion du signal `write_enable` et des temps critiques est conforme aux exigences de la carte MAX10.
+
+## Résumé des signaux principaux
+
+- **`avl_readdatavalid_o`** : Signal de validation des données lues pour le CPU.  
+- **`lp36_rdy_s`** : Indique si le LP36 est prêt pour une nouvelle écriture.  
+- **`lp36_we_o`** : Signal `write_enable` pour les opérations avec le LP36.  
+- **`counter_done_s`** : Indique la fin d'un cycle d'écriture de 1 μs.
 
 # Code C
 

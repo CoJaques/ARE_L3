@@ -118,7 +118,7 @@ begin
     end process;
 
     -- Read multiplexer process
-    read_decoder_p : process(all)
+    read_decoder : process(all)
     begin
         --| Value by default
         readdata_next_s      <= (others => '0');
@@ -137,7 +137,7 @@ begin
     end process;
 
     -- Read register process
-    read_register_p : process(avl_reset_i, avl_clk_i)
+    read_register : process(avl_reset_i, avl_clk_i)
     begin
         if avl_reset_i = '1' then
             readdatavalid_reg_s <= '0';
@@ -155,7 +155,7 @@ begin
     -- -----------------------------------------
 
     -- Write channel with register
-    write_register_p : process(avl_reset_i, avl_clk_i)
+    write_register : process(avl_reset_i, avl_clk_i)
     begin
         if avl_reset_i='1' then
             led_reg_s         <= (others => '0');
