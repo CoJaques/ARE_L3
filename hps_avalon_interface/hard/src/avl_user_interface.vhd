@@ -77,7 +77,6 @@ architecture rtl of avl_user_interface is
     signal lp36_data_reg_s      : std_logic_vector(lp36_data_o'range);
     signal lp36_status_reg_s    : std_logic_vector(lp36_status_i'range);
 
-    signal readdatavalid_next_s : std_logic;
     signal readdatavalid_reg_s  : std_logic;
     signal readdata_next_s      : std_logic_vector(avl_readdata_o'range);
     signal readdata_reg_s       : std_logic_vector(avl_readdata_o'range);
