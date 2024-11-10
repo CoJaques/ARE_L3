@@ -22,10 +22,10 @@
  * 0.0    14.14.2024  TMU & CJS    AVL source function
  *
 *****************************************************************************************/
-
 #include <stdint.h>
 #include <stdbool.h>
 #include "avl_function.h"
+#include <unistd.h>
 
 void leds_init(void)
 {
@@ -67,6 +67,21 @@ void leds_toggle(uint32_t maskleds)
 	AVL_REG(LEDS) ^= maskleds;
 }
 
+uint32_t lp36_init(void)
+{
+	uint32_t status = lp36_status();
+
+	if (status != 1) {
+		return status;
+	}
+
+	for (int i = 0; i < 4; i++) {
+		lp36_write(0, i);
+	}
+
+	return 1;
+}
+
 uint32_t lp36_status(void)
 {
 	return AVL_REG(LP36_STATUS);
@@ -79,6 +94,15 @@ uint32_t is_lp36_ready(void)
 
 void lp36_write(uint32_t data, uint8_t sel)
 {
+	// Wait up to 50 µs for LP36 to be ready
+	for (int i = 0; i < 5;
+	     i++) { // Check every 10 µs, up to 5 iterations (50 µs total)
+		if (is_lp36_ready()) {
+			break; // Ready, exit the loop
+		}
+		usleep(10); // Wait for 10 µs
+	}
+
 	AVL_REG(LP36_DATA) = data;
 	AVL_REG(LP36_SEL) = sel;
 }

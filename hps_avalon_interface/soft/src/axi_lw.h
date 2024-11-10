@@ -26,3 +26,4 @@
 
 // Base address
 #define AXI_LW_HPS_FPGA_BASE_ADD 0xFF200000
+#define AXI_REG(_x_)		 *(volatile uint32_t *)(AXI_LW_HPS_FPGA_BASE_ADD + _x_)

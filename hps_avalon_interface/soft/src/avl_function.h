@@ -43,6 +43,11 @@
 #define LP36_SEL     0x0084
 #define LP36_DATA    0x0088
 
+#define NUM_KEYS     4
+#define KEY_0	     0
+#define KEY_1	     1
+#define KEY_2	     2
+#define KEY_3	     3
 //***************************//
 //****** Init function ******//
 
@@ -86,6 +91,11 @@ void leds_clear(uint32_t maskleds);
 // Parameter : "maskleds"= Leds selected to apply a toggle (maximum 0x3FF)
 // Return : None
 void leds_toggle(uint32_t maskleds);
+
+// lp36_init function : Initialize the LP36 and get the status to check if it is ready
+// Parameter : None
+// Return : Status of the LP36, must be 1 if lp36 is ready
+uint32_t lp36_init(void);
 
 // lp36 status function : Read the status of the LP36
 // Parameter : None
