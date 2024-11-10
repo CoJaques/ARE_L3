@@ -27,50 +27,58 @@
 #include <stdbool.h>
 #include "avl_function.h"
 
-void Keys_init(void)
+void leds_init(void)
 {
+	leds_write(0);
 }
 
-void Switchs_init(void)
-{
-}
-
-void Leds_init(void)
-{
-}
-
-bool Key_read(int key_number)
+bool key_read(int key_number)
 {
 	return (AVL_REG(BUTTONS) & (1 << key_number)) == 0;
 }
 
-uint32_t Switchs_read(void)
+uint32_t switchs_read(void)
 {
 	return AVL_REG(SWITCHES);
 }
 
-uint32_t Leds_read(void)
+uint32_t leds_read(void)
 {
 	return AVL_REG(LEDS);
 }
 
-void Leds_write(uint32_t value)
+void leds_write(uint32_t value)
 {
 	AVL_REG(LEDS) = value;
 }
 
-void Leds_set(uint32_t maskleds)
+void leds_set(uint32_t maskleds)
 {
 	AVL_REG(LEDS) |= maskleds;
 }
 
-void Leds_clear(uint32_t maskleds)
+void leds_clear(uint32_t maskleds)
 {
 	AVL_REG(LEDS) &= ~maskleds;
 }
 
-void Leds_toggle(uint32_t maskleds)
+void leds_toggle(uint32_t maskleds)
 {
 	AVL_REG(LEDS) ^= maskleds;
 }
 
+uint32_t lp36_status(void)
+{
+	return AVL_REG(LP36_STATUS);
+}
+
+uint32_t is_lp36_ready(void)
+{
+	return lp36_status();
+}
+
+void lp36_write(uint32_t data, uint8_t sel)
+{
+	AVL_REG(LP36_DATA) = data;
+	AVL_REG(LP36_SEL) = sel;
+}

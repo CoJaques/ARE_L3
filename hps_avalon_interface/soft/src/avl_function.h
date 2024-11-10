@@ -86,3 +86,19 @@ void leds_clear(uint32_t maskleds);
 // Parameter : "maskleds"= Leds selected to apply a toggle (maximum 0x3FF)
 // Return : None
 void leds_toggle(uint32_t maskleds);
+
+// lp36 status function : Read the status of the LP36
+// Parameter : None
+// Return : Status of the LP36
+uint32_t lp36_status(void);
+
+// is_lp36_ready function : Check if the LP36 is ready
+// Parameter : None
+// Return : True(1) if LP36 is ready, and False(0) if LP36 is not ready
+uint32_t is_lp36_ready(void);
+
+// lp36_write function : Write a value to the LP36
+// Parameter : "data"= data to be applied to the LP36
+// "sel"= select the LP36 to write, from 0 to 3
+// return : None
+void lp36_write(uint32_t data, uint8_t sel);
