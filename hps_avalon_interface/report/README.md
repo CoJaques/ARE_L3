@@ -8,6 +8,28 @@
 
 HEIG-VD
 
+# Table des matières
+
+1. [Introduction](#introduction)
+2. [Plan d'adressage](#plan-dadressage)
+   - [Plan d'adressage final](#plan-dadressage-final)
+3. [Conception](#conception)
+   - [Schéma de principe](#schéma-de-principe)
+   - [Gestion de l'écriture](#gestion-de-lécriture)
+   - [Gestion de la lecture](#gestion-de-la-lecture)
+   - [Gestion du LP36 spécifique](#lp36-spécifique)
+4. [Avalon](#avalon)
+   - [Lecture](#lecture)
+   - [Écriture](#écriture)
+5. [Implémentation](#implémentation)
+   - [Description globale](#description-globale)
+   - [Synthèse des processus](#synthèse-des-processus)
+   - [Points forts de l'implémentation](#points-forts-de-limplémentation)
+   - [Résumé des signaux principaux](#résumé-des-signaux-principaux)
+6. [Code C](#code-c)
+7. [Conclusion](#conclusion)
+
+
 # Introduction
 
 Ce rapport présente le travail réalisé dans le cadre du troisième laboratoire du cours "Architecture des systèmes embarqués (ARE)", intitulé "Conception d’une interface simple". L'objectif principal de ce laboratoire est de concevoir et implémenter une interface matérielle connectée au bus Avalon pour contrôler divers périphériques de la carte DE1-SoC, ainsi qu'une liaison parallèle vers une carte Max10_leds. Le rapport détaille les différentes étapes de la conception, de la simulation et des tests, tout en mettant en évidence les choix techniques effectués pour répondre aux spécifications demandées.
@@ -180,4 +202,14 @@ Le fichier est organisé autour de plusieurs processus, chacun étant dédié à
 
 # Code C
 
+Nous avons ensuite implémenté un programme permettant d'intéragir avec notre interface. Ce programme est relativement simple et ressemble au programme du laboratoire précédent. Il n'y a rien de spécial à signaler.
+
 # Conclusion
+
+Ce laboratoire nous a permis de concevoir et d'implémenter une interface matérielle efficace entre un CPU et un FPGA, en respectant les contraintes spécifiques du bus Avalon et de la carte MAX10. 
+
+À travers ce projet, nous avons acquis une meilleure compréhension des interactions entre les différents composants matériels et appris à structurer un plan d'adressage modulable et extensible. La conception et l'implémentation de notre interface ont également mis en lumière l'importance de la synchronisation des signaux asynchrones, la gestion des temps critiques, et la protection contre les conflits d'accès.
+
+Grâce à une machine à états bien définie et à l'organisation modulaire de notre code VHDL, nous avons pu garantir un fonctionnement fiable et conforme aux spécifications demandées. Les tests effectués ont confirmé la robustesse de notre design et sa capacité à gérer des scénarios complexes d'accès concurrentiel aux registres.
+
+Enfin, cette expérience nous a permis de renforcer nos compétences en conception de systèmes embarqués et en interaction matérielle. Nous sommes satisfaits des résultats obtenus, qui illustrent l'importance d'une conception soignée et méthodique dans le domaine de l'architecture des systèmes embarqués.
