@@ -288,7 +288,7 @@ Le fichier est organisé autour de plusieurs processus, chacun étant dédié à
 
 # Code C
 
-Nous avons ensuite implémenté un programme permettant d'intéragir avec notre interface. Ce programme est relativement simple et ressemble au programme du laboratoire précédent. Il n'y a rien de spécial à signaler.
+Nous avons ensuite implémenté un programme permettant d'intéragir avec notre interface. Ce programme est relativement simple et ressemble au programme du laboratoire précédent. Il n'y a rien de spécial à signaler. A part le fait que nous avons décidé, lors de l'écriture sur la LP36, d'effectuer une boucle d'attente contrôlant le bit `lp36_rdy` pour s'assurer que le LP36 est prêt pour une nouvelle écriture. Si elle ne l'est pas, le programme attend au maximum 50us.
 
 # Conclusion
 
