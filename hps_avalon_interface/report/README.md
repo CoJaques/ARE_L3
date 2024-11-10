@@ -52,14 +52,23 @@ Pour les registres où seuls certains bits parmi les 32 bits sont utilisés, nou
 # Conception
 
 ## Schéma de principe
+![Principe](image.png)
+<br>
 
 ## Avalon
 
 ### Lecture
+![read](image-1.png)
+<br>
 
 ### Écriture
+![read](image-2.png)
+<br>
 
 ## LP36 spécifique
+![chrono](image-4.png)
+![LP36](image-3.png)
+<br>
 
 # Implémetation
 
