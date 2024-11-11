@@ -297,7 +297,7 @@ Dans la simulation ci-dessous, on observe que la seconde "Dans l'exemple ci-dess
 
 ![](simulation/base2.png)
 
-## Maintient du signal WE durant 1us :
+## Maintient du signal lp36_we_o durant 1us :
 
 Le signal `lp36_we_o` est maintenu actif pendant une durée de 1 µs, permettant ainsi au périphérique d'effectuer une lecture sans interférence. Cette approche permet au périphérique de lire des données stables et cohérentes, sans risque de corruption due à une écriture simultanée.
 
