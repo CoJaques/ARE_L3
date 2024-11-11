@@ -287,7 +287,7 @@ Le fichier est organisé autour de plusieurs processus, chacun étant dédié à
 - **`lp36_we_o`** : Signal `write_enable` pour les opérations avec le LP36.  
 - **`counter_done_s`** : Indique la fin d'un cycle d'écriture de 1 μs.
 
-# Simulation de l'interface
+# Simulation interface
 
 ## Opération de base de lecture et d'écriture :
 
