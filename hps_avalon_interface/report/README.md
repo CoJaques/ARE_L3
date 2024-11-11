@@ -26,8 +26,9 @@ HEIG-VD
    - [Synthèse des processus](#synthèse-des-processus)
    - [Points forts de l'implémentation](#points-forts-de-limplémentation)
    - [Résumé des signaux principaux](#résumé-des-signaux-principaux)
-6. [Code C](#code-c)
-7. [Conclusion](#conclusion)
+6. [Simulation de l'interface](#simulation-interface)
+7. [Code C](#code-c)
+8. [Conclusion](#conclusion)
 
 
 # Introduction
@@ -285,6 +286,20 @@ Le fichier est organisé autour de plusieurs processus, chacun étant dédié à
 - **`lp36_rdy_s`** : Indique si le LP36 est prêt pour une nouvelle écriture.  
 - **`lp36_we_o`** : Signal `write_enable` pour les opérations avec le LP36.  
 - **`counter_done_s`** : Indique la fin d'un cycle d'écriture de 1 μs.
+
+# Simulation de l'interface
+
+![](simulation/base1.png)
+
+![](simulation/base2.png)
+
+![](simulation/blockwrite1.png)
+
+![](simulation/blockwrite2.png)
+
+![](simulation/weduring1us1.png)
+
+![](simulation/weduring1us2.png)
 
 # Code C
 
