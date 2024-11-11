@@ -287,9 +287,11 @@ Le fichier est organisé autour de plusieurs processus, chacun étant dédié à
 - **`lp36_we_o`** : Signal `write_enable` pour les opérations avec le LP36.  
 - **`counter_done_s`** : Indique la fin d'un cycle d'écriture de 1 μs.
 
-# Simulation de l'
+# Simulation de l'interface
 
-## Opération de base de lecture :
+## Opération de base de lecture et d'écriture :
+
+Dans la simulation ci-dessous, on observe que la seconde "Dans l'exemple ci-dessous, plusieurs opérations de lecture et d'écriture sont effectuées. Tout d'abord, une première lecture de la constante est réalisée. Les boutons sont ensuite testés, ainsi que les switches, dont la valeur est initialement définie à 0x0000000F. La seconde lecture affiche la même valeur, bien qu'elle ait été réinitialisée à zéro auparavant. Le chronogramme confirme cette valeur. Ensuite, une écriture est effectuée pour activer les deux éléments, puis une seconde pour les éteindre." d'écriture (avl_write_i), qui contient des données composées uniquement de 0, n'est pas prise en compte ; la valeur 0xFFFFFFFF est maintenue malgré la tentative d'écriture. Cela permet d'éviter toute corruption des données pendant la lecture.
 
 ![](simulation/base1.png)
 
