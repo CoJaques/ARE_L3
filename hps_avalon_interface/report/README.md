@@ -301,7 +301,9 @@ Le fichier est organisé autour de plusieurs processus, chacun étant dédié à
 
 ![](simulation/weduring1us2.png)
 
-## Block write :
+## Désactivation de l'écriture lors d'une lecture par la max 10 :
+
+Dans la simulation ci-dessous, on observe que l'instruction d'écriture sur les données n'est pas prise en compte ; la valeur 0xFFFFFFFF est maintenue malgré la tentative d'écriture. Cela permet ainsi d'éviter toute corruption des données pendant leur lecture.
 
 ![](simulation/blockwrite1.png)
 
