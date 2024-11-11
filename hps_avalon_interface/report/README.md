@@ -297,7 +297,7 @@ Le fichier est organisé autour de plusieurs processus, chacun étant dédié à
 
 ## Maintient du signal WE durant 1us :
 
-Le signal WE est maintenu inactif pendant une durée de 1 µs, permettant ainsi au périphérique d'effectuer une lecture sans interférence. Cette approche permet au périphérique de lire des données stables et cohérentes, sans risque de corruption due à une écriture simultanée.
+Le signal WE est maintenu actif pendant une durée de 1 µs, permettant ainsi au périphérique d'effectuer une lecture sans interférence. Cette approche permet au périphérique de lire des données stables et cohérentes, sans risque de corruption due à une écriture simultanée.
 
 ![](simulation/weduring1us1.png)
 
