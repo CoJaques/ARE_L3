@@ -102,6 +102,6 @@ void lp36_write(uint32_t data, uint8_t sel)
 		printf("error during lp36 write, lp36 not read \n");
 	}
 
-	AVL_REG(LP36_SEL) = sel;
 	AVL_REG(LP36_DATA) = data;
+	AVL_REG(LP36_SEL) = sel;
 }
