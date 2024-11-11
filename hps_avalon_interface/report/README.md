@@ -309,6 +309,8 @@ Le fichier est organisé autour de plusieurs processus, chacun étant dédié à
 
 ## Reset du counter :
 
+Dans la simulation ci-dessous, on observe que le compteur se réinitialise correctement à 0 lorsque l'écriture sur le signal SEL est interrompue pour permettre l'écriture des données. On constate également que le signal we reste actif pendant 1000 µs supplémentaires.
+
 ![](simulation/samecounter2bus1.png)
 
 ![](simulation/samecounter2bus2.png)
