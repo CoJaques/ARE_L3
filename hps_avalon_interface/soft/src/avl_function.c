@@ -95,13 +95,10 @@ uint32_t is_lp36_ready(void)
 
 void lp36_write(uint32_t data, uint8_t sel)
 {
-		printf("Data : %u mode : %u \n", data, sel);
-
-	if(!is_lp36_ready())
-	{
+	if (!is_lp36_ready()) {
 		printf("error during lp36 write, lp36 not read \n");
 	}
 
-	AVL_REG(LP36_DATA) = data;
 	AVL_REG(LP36_SEL) = sel;
+	AVL_REG(LP36_DATA) = data;
 }
