@@ -228,6 +228,8 @@ begin
                     lp36_state_fut_s <= WE_DATA;
                 elsif cs_wr_lp36_sel_s = '1' then
                     lp36_state_fut_s <= WE_SEL;
+					 else
+						  lp36_state_fut_s <= IDLE;
                 end if;
 
                 timer_reset_s <= '1';
@@ -236,7 +238,9 @@ begin
                     lp36_state_fut_s <= WE_RST;
                 elsif counter_done_s then
                     lp36_state_fut_s <= IDLE;
-                end if;
+                else
+							lp36_state_fut_s <= WE_DATA;
+					 end if;
 
                 lp36_we_data_s <= '1';
             when WE_SEL =>
@@ -244,6 +248,8 @@ begin
                     lp36_state_fut_s <= WE_RST;
                 elsif counter_done_s then
                     lp36_state_fut_s <= IDLE;
+					 else
+							lp36_state_fut_s <= WE_SEL;
                 end if;
 
                 lp36_we_sel_s <= '1';
@@ -255,6 +261,8 @@ begin
             when WE_BOTH =>
                 if counter_done_s then
                     lp36_state_fut_s <= IDLE;
+					 else
+							lp36_state_fut_s <= WE_BOTH;
                 end if;
 
                 lp36_we_sel_s  <= '1';

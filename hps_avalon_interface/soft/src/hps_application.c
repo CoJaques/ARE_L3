@@ -61,6 +61,8 @@ int main(void)
 	bool keys_state[4] = { false, false, false, false };
 	bool keys_state_old[4] = { false, false, false, false };
 
+	int dm_counter = 0;
+
 	while (true) {
 		volatile uint32_t switchs_value = switchs_read();
 		read_keys(keys_state);
@@ -90,6 +92,13 @@ int main(void)
 			break;
 		}
 
+		// Handle KEY2 actions
+		if (keys_state[KEY_2] && !keys_state_old[KEY_2]) {
+			if (sw98 == 3 && key10 == 0) {
+				dm_counter = (dm_counter + 1) % 5;
+			}
+		}
+
 		// Update Max10_leds based on SW9-8
 		switch (sw98) {
 		case 0: // Second LEDs DS30..1
@@ -102,17 +111,11 @@ int main(void)
 			lp36_write(leds_value, 2);
 			break;
 		case 3: // LED square DM
+			// Rotate the value to display on the DM LEDs
+			leds_value = ((leds_value << (5 * dm_counter)) |
+				      (leds_value >> (32 - (5 * dm_counter))));
 			lp36_write(leds_value, 3);
 			break;
-		}
-
-		// Handle KEY2 actions
-		if (keys_state[KEY_2] && !keys_state_old[KEY_2]) {
-			if (sw98 == 3 && key10 == 0) {
-				// Shift down the value displayed on the DM LED square
-				leds_value = (leds_value << 1) & 0xFF;
-				lp36_write(leds_value, 3);
-			}
 		}
 
 		// Handle KEY3 actions
