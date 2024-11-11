@@ -216,7 +216,7 @@ begin
         end if;
     end process mss_state_reg;
 
-    mss_fut_dec : process (lp36_state_pres_s, lp36_we_data_s, lp36_we_sel_s, counter_done_s) is
+    mss_fut_dec : process (cs_wr_lp36_data_s, cs_wr_lp36_sel_s, lp36_state_pres_s, lp36_we_data_s, lp36_we_sel_s, counter_done_s) is
     begin
         lp36_we_sel_s  <= '0';
         lp36_we_data_s <= '0';

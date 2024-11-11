@@ -95,24 +95,13 @@ uint32_t is_lp36_ready(void)
 
 void lp36_write(uint32_t data, uint8_t sel)
 {
-	int ok = 0;
-
-	// Wait up to 50 µs for LP36 to be ready
-	for (int i = 0; i < 5;
-	     i++) { // Check every 10 µs, up to 5 iterations (50 µs total)
-		if (is_lp36_ready()) {
-			ok = 1;
-			break; // Ready, exit the loop
-		}
-		// TODO MANAGE time
-	}
-
-	if (!ok)
-		printf("error no time \n");
-
-	if (sel == 3)
 		printf("Data : %u mode : %u \n", data, sel);
 
-	AVL_REG(LP36_DATA) = data;
+	if(!is_lp36_ready())
+	{
+		printf("error during lp36 write, lp36 not read \n");
+	}
+
 	AVL_REG(LP36_SEL) = sel;
+	AVL_REG(LP36_DATA) = data;
 }
