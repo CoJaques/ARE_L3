@@ -220,7 +220,7 @@ begin
 
           when lp36_data_addr =>
 
-            if (lp36_we_sel_s = '0') then
+            if (lp36_we_data_s = '0') then
               lp36_data_reg_s   <= avl_writedata_i;
               cs_wr_lp36_data_s <= '1';
             end if;

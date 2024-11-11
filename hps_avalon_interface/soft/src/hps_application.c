@@ -137,7 +137,7 @@ int main(void)
 				value = 252645135;
 			}
 
-			lp36_write(value,0);
+			// lp36_write(value,0);
 			// lp36_write(value,1);
 			// lp36_write(value,2);
 			//lp36_write(value,3);
