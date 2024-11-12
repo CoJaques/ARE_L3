@@ -291,7 +291,7 @@ Le fichier est organisé autour de plusieurs processus, chacun étant dédié à
 
 ## Opération de base de lecture et d'écriture :
 
-Dans l'exemple ci-dessous, plusieurs opérations de lecture et d'écriture sont effectuées. Tout d'abord, une première lecture de la constante est réalisée. Les boutons sont ensuite testés, ainsi que les switches, dont la valeur est initialement définie à 0x0000000F. La seconde lecture affiche la même valeur, bien qu'elle ait été réinitialisée à zéro auparavant. Le chronogramme confirme cette valeur. Ensuite, une écriture est effectuée pour activer les leds, puis une seconde pour les éteindre.
+Dans l'exemple ci-dessous, plusieurs opérations de lecture et d'écriture sont effectuées. Tout d'abord, une première lecture de la constante est réalisée. Les boutons sont ensuite testés, ainsi que les switches, dont la valeur est initialement définie à 0x0000000F. La seconde lecture affiche la même valeur, bien qu'elle ait été réinitialisée à zéro auparavant, ceci est dû à un problème avec la simulation cependant le chronogramme confirme cette valeur. Ensuite, une écriture est effectuée pour activer les leds, puis une seconde pour les éteindre.
 
 ![](simulation/base1.png)
 
