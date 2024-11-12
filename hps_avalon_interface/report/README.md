@@ -315,7 +315,7 @@ Dans la simulation ci-dessous, on observe que la seconde instruction d'écriture
 
 ## Reset du counter :
 
-Dans la simulation ci-dessous, on observe que le compteur se réinitialise correctement à 0 lorsque l'écriture sur le signal `lp36_sel_reg_s` est interrompue pour permettre l'écriture des données (`lp36_data_reg_s`). On constate également que le signal we reste actif pendant 1000 µs supplémentaires.
+Dans la simulation ci-dessous, on observe que le compteur se réinitialise correctement à 0 lorsque l'écriture sur le signal `lp36_sel_reg_s` est suspendue pour permettre l'écriture des données (`lp36_data_reg_s`). Cette vérification est validée par le fait que le signal `write_i` passe à 1 à 460 ns et que le signal `lp36_we_o` est maintenu actif jusqu'à 1538 ns. Un délais de 1us est donc ajouté.
 
 ![](simulation/samecounter2bus1.png)
 
