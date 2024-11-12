@@ -321,6 +321,12 @@ Dans la simulation ci-dessous, on observe que le compteur se réinitialise corre
 
 ![](simulation/samecounter2bus2.png)
 
+## Test sur DE1-SoC et Max 10
+
+Afin de confirmer le bon fonctionnement des opérations simulées, des tests ont été réalisés directement sur la carte DE1-SoC et la carte Max 10. Ces tests en conditions réelles ont permis de vérifier la cohérence des résultats observés en simulation. 
+
+Le comportement a pu être validé, notamment le maintien des signaux, la réinitialisation du compteur et l'activation des LEDs, se produisent correctement. Cette étape assure la fiabilité des interactions entre les différents composants du système dans un environnement physique.
+
 # Code C
 
 Nous avons ensuite implémenté un programme permettant d'intéragir avec notre interface. Ce programme est relativement simple et ressemble au programme du laboratoire précédent. Il n'y a rien de spécial à signaler. A part le fait que nous avons décidé, lors de l'écriture sur la LP36, d'effectuer une boucle d'attente contrôlant le bit `lp36_rdy` pour s'assurer que le LP36 est prêt pour une nouvelle écriture. Si elle ne l'est pas, le programme attend au maximum 50us.
