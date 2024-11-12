@@ -307,7 +307,7 @@ Le signal `lp36_we_o` est maintenu actif pendant une durée de 1 µs, permettant
 
 ## Désactivation de l'écriture lors d'une lecture par la max 10 :
 
-Dans la simulation ci-dessous, on observe que la seconde instruction d'écriture `avl_write_i`, qui contient des données composées uniquement de 0, n'est pas prise en compte; la valeur 0xFFFFFFFF est maintenue malgré la tentative d'écriture. Cela permet d'éviter toute corruption des données pendant la lecture.
+Dans la simulation ci-dessous, la situation initiale montre une première écriture réussie où la valeur `0xFFFFFFFF` est chargée dans le registre cible. Lors de la seconde instruction d'écriture, `avl_write_i`, des données composées uniquement de 0 sont envoyées. Cependant, cette instruction n'est pas prise en compte : la valeur `0xFFFFFFFF` est maintenue dans le registre, malgré la tentative d'écriture de 0. Ce mécanisme empêche toute modification des données pendant une opération de lecture en cours, garantissant ainsi l'intégrité des informations et évitant toute corruption due à des écritures simultanées.
 
 ![](simulation/blockwrite1.png)
 
