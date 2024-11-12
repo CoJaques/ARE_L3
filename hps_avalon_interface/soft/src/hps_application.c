@@ -35,6 +35,7 @@
 
 int __auto_semihosting;
 
+// Function used to read the keys and store the state in the keys_state array
 void read_keys(bool *keys_state)
 {
 	for (int i = 0; i < NUM_KEYS; i++) {
@@ -42,6 +43,7 @@ void read_keys(bool *keys_state)
 	}
 }
 
+// Function used to update the old keys state
 void update_old_keys(bool *keys_state, bool *keys_state_old)
 {
 	for (int i = 0; i < NUM_KEYS; i++) {
@@ -99,6 +101,7 @@ int main(void)
 
 		// Handle KEY10 actions, make the LEDs rotate from left to right
 		if (key10 == 0 && sw98 == 3) {
+			//Set leds value by rotating the bits to the right
 			leds_value =
 				((leds_value << (LEDS_BY_ROW * dm_counter)) |
 				 (leds_value >>
@@ -107,6 +110,7 @@ int main(void)
 
 		// Handle KEY2 actions
 		if (keys_state[KEY_2] && !keys_state_old[KEY_2]) {
+			// If mode = 3 and key 0 and 1 are not pressed, increment the counter
 			if (sw98 == 3 && key10 == 0) {
 				dm_counter = (dm_counter + 1) % ROWS;
 			}

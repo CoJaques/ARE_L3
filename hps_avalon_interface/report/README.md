@@ -329,7 +329,15 @@ Le comportement a pu être validé, notamment le maintien des signaux, la réini
 
 # Code C
 
-Nous avons ensuite implémenté un programme permettant d'intéragir avec notre interface. Ce programme est relativement simple et ressemble au programme du laboratoire précédent. Il n'y a rien de spécial à signaler. A part le fait que nous avons décidé, lors de l'écriture sur la LP36, d'effectuer une boucle d'attente contrôlant le bit `lp36_rdy` pour s'assurer que le LP36 est prêt pour une nouvelle écriture. Si elle ne l'est pas, le programme attend au maximum 50us.
+Nous avons ensuite implémenté un programme permettant d'intéragir avec notre interface. Ce programme est relativement simple et ressemble au programme du laboratoire précédent.
+
+Concernant la gestion et communication avec la carte LP36, nous avons ajouté une phase d'initialisation qui s'occupe de contrôler l'état du registre de status de la carte. Si la carte n'est pas dans l'état adéquat, le programme est stoppé et un message d'erreur est affiché.
+
+Pour ce qui est de l'écriture de data et sel, nous avons crée une fonction lp36_write. Cette fonction affiche un message d'erreur si la carte LP36 est déjà en cours d'écriture. Ensuite, le registre sel est écrit, puis le registre data. Cela permet de s'assurer que les datas sont écrits dans la bonne region de la carte.
+
+## Test sur carte
+
+Nous avons ensuite pu tester notre programme sur la carte DE1-SoC. Les résultats obtenus étaient conformes aux attentes, confirmant le bon fonctionnement de l'interface matérielle et la fiabilité des communications entre le CPU et le FPGA. Les LEDs s'allumaient et s'éteignaient correctement, les boutons et les interrupteurs étaient bien lus, et les opérations avec la carte MAX10 se déroulaient sans erreur.
 
 # Conclusion
 
